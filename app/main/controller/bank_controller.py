@@ -39,7 +39,7 @@ class BankDownloadRSA(Resource):
 
 @api.route('/bank/transaction')
 class BankTransac(Resource):
-    @api.response(201, 'Bank  transaction successfully created.')
+    @api.response(201, 'Bank transaction successfully created.')
     @api.doc('Bank rsa transaction')
     def post(self):
         """ bank transaction """
