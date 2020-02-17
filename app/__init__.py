@@ -1,16 +1,16 @@
-# from flask_restplus import Api
-# from flask import Blueprint
+# app/__init__.py
 
-# # from .main.controller.user_controller import api as user_ns
-# # from .main.controller.auth_controller import api as auth_ns
+from flask_restplus import Api
+from flask import Blueprint
 
-# blueprint = Blueprint('api', __name__)
+from .main.controller.user_controller import api as user_ns
 
-# api = Api(blueprint,
-#           title='FLASK RESTPLUS API BOILER-PLATE WITH JWT',
-#           version='1.0',
-#           description='a boilerplate for flask restplus web service'
-#           )
+blueprint = Blueprint('api', __name__)
 
-# # api.add_namespace(user_ns, path='/user')
-# # api.add_namespace(auth_ns)
+api = Api(blueprint,
+          title='FLASK RESTPLUS API BOILER-PLATE WITH JWT',
+          version='1.0',
+          description='a boilerplate for flask restplus web service'
+          )
+
+api.add_namespace(user_ns, path='/user')
