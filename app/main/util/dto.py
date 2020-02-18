@@ -9,3 +9,11 @@ class UserDto:
         'password': fields.String(required=True, description='user password'),
         'public_id': fields.String(description='user Identifier')
     })
+
+
+class CustomerDto:
+    api = Namespace('customer', description='customer related operations')
+    customer = api.model('customer', {
+        'CustomerName': fields.String(required=True, description='Customer name'),
+        'UserName': fields.String(required=True, description='Customer UserName'),
+    })    
