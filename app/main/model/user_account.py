@@ -8,12 +8,17 @@ class UserAccount(db.Model):
     Password = db.Column(db.String(100))
 
     @property
+    def password(self):
+        raise AttributeError('password: write-only field')
+
+    @password.setter
     def password(self, password):
-        self.password = flask_bcrypt.generate_password_hash(password).decode('utf-8')
+        print(password)
+        self.Password = flask_bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):
-        return flask_bcrypt.check_password_hash(self.password, password)
+        return flask_bcrypt.check_password_hash(self.Password, password)
 
     def __repr__(self):
-        return "<User Account '{}'>".format(self.username)
+        return "<User Account '{}'>".format(self.UserName)
 

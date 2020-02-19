@@ -9,9 +9,9 @@ from .main.controller.customer_controller import api as customer_ns
 blueprint = Blueprint('api', __name__)
 
 api = Api(blueprint,
-          title='FLASK RESTPLUS API BOILER-PLATE WITH JWT',
+          title='Internet banking project',
           version='1.0',
-          description='a boilerplate for flask restplus web service'
+          description='internet banking project'
           )
 
 api.add_namespace(user_ns, path='/user')

@@ -4,6 +4,7 @@ import datetime
 from app.main import db
 from app.main.model.customer import Customer
 from app.main.model.user_account import UserAccount
+from app.main.service.user_account_service import UserAccountService
 
 def save_new_customer(data):
     user_account = UserAccount.query.filter_by(UserName=data['UserName']).first()
@@ -12,6 +13,10 @@ def save_new_customer(data):
             CustomerName = data['CustomerName'],
         )
         save_changes(new_customer)
+        UserAccountService.save_changes(UserAccount(
+            UserName = data['UserName'],
+            Password = data['Password']
+        ))
         response_object = {
             'status' : 'success',
             'message': 'Success create customer'
@@ -33,3 +38,4 @@ def get_customer(id):
 def save_changes(data):
     db.session.add(data)
     db.session.commit()    
+    

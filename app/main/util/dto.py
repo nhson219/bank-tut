@@ -16,4 +16,5 @@ class CustomerDto:
     customer = api.model('customer', {
         'CustomerName': fields.String(required=True, description='Customer name'),
         'UserName': fields.String(required=True, description='Customer UserName'),
+        'Password': fields.String(required=True, description='Customer Password'),
     })    
