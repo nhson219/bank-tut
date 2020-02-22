@@ -74,7 +74,7 @@ def get_all_customer():
     return Customer.query.all()
 
 def get_customer(id):
-    return Customer.query.filter_by(id=id).first()
+    return Customer.query.filter_by(CustomerId=id).first()
 
 def save_changes(data):
     db.session.add(data)

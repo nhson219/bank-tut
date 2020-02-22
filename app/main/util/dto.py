@@ -13,9 +13,6 @@ class UserDto:
 
 class CustomerDto:
     api = Namespace('customer', description='customer related operations')
-    customer_get_info = api.model('customer', {
-        'CustomerId': fields.Integer(required=True, description='customer id'),
-    })
     customer_get = api.model('customer', {
         'CustomerName': fields.String(required=True, description='Customer name'),
         'CreatedDate': fields.DateTime(required=True, description='Customer created at'),
