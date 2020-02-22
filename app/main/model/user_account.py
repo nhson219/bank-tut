@@ -9,11 +9,10 @@ class UserAccount(db.Model):
 
     @property
     def password(self):
-        raise AttributeError('password: write-only field')
+        return self.Password
 
     @password.setter
     def password(self, password):
-        print(password)
         self.Password = flask_bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):

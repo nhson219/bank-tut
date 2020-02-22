@@ -5,24 +5,16 @@ from app.main import db
 from app.main.model.user_account import UserAccount
 
 class UserAccountService:
-# def save_new_customer(data):
-#     user_account = UserAccount.query.filter_by(UserName=data['UserName']).first()
-#     if not user_account:
-#         new_customer = Customer(
-#             CustomerName = data['CustomerName'],
-#         )
-#         save_changes(new_customer)
-#         response_object = {
-#             'status' : 'success',
-#             'message': 'Success create customer'
-#         }
-#         return response_object, 201
-#     else:
-#         response_object = {
-#             'status' : 'fail',
-#             'message': 'Customer already exists. Please login'
-#         }
-#         return response_object, 409
+    def save_user_account(data):
+        try: 
+            db.session.add(data)
+            db.session.flush()
+            db.session.commit()
+            return data.AccountId
+        except:
+            db.session.rollback()
+        finally:
+            db.session.close()
 
 # def get_all_customer():
 #     return Customer.query.all()
