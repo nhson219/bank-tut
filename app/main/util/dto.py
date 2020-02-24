@@ -17,7 +17,7 @@ class CustomerDto:
         'CustomerName': fields.String(required=True, description='Customer name'),
         'CreatedDate': fields.DateTime(required=True, description='Customer created at'),
     })
-    customer = api.model('customer', {
+    customer_add = api.model('customer', {
         'CustomerName': fields.String(required=True, description='Customer name'),
         'UserName': fields.String(required=True, description='Customer UserName'),
         'Password': fields.String(required=True, description='Customer Password'),
