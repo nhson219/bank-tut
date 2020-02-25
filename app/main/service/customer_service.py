@@ -25,7 +25,8 @@ def save_new_customer(data):
                 new_customer = Customer(
                     CustomerName = data['CustomerName'],
                     UserAccountId = user_account_id,
-                    PaymentAccount = payment_account_id
+                    PaymentAccount = payment_account_id,
+                    Nickname = data['Nickname']
                 )
                 save_changes(new_customer)
                 response_object = {

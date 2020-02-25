@@ -9,6 +9,7 @@ class Customer(db.Model):
     CreatedBy = db.Column(db.Integer)
     UserAccountId = db.Column(db.Integer)
     PaymentAccount = db.Column(db.Integer)
+    Nickname = db.Column(db.String(255))
 
     @property
     def __repr__(self):
