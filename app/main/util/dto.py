@@ -15,16 +15,21 @@ class CustomerDto:
     api = Namespace('customer', description='customer related operations')
     customer_get = api.model('customer', {
         'CustomerName': fields.String(required=True, description='Customer name'),
+        'nickname': fields.String(required=True, description='Customer nickname'),
+        'email': fields.String(required=True, description='Customer email'),
+        'phone': fields.String(required=True, description='Customer phone'),
         'CreatedDate': fields.DateTime(required=True, description='Customer created at'),
     })
     customer_add = api.model('customer', {
         'customername': fields.String(required=True, description='Customer name'),
         'username': fields.String(required=True, description='Customer UserName'),
         'nickname': fields.String(required=True, description='Customer nickname'),
-        'phone': fields.String(required=True, description='Customer nickname'),
-        'email': fields.String(required=True, description='Customer nickname'),
+        'phone': fields.String(required=True, description='Customer phone'),
+        'email': fields.String(required=True, description='Customer email'),
     })
     customer_update = api.model('customer', {
-        'customerid': fields.Integer(required=True, description='customer id'),
+        'id': fields.Integer(required=True, description='customer id'),
         'customername': fields.String(required=True, description='Customer name'),
+        'nickname': fields.String(required=True, description='Customer nickname'),
+        'phone': fields.String(required=True, description='Customer phone'),
     })     

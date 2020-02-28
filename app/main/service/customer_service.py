@@ -10,12 +10,13 @@ from app.main.service.payment_account_service import PaymentAccountService
 from app.main.service.response_service import ResponseService
 
 def save_new_customer(data):
-    user_account = UserAccount.query.filter_by(UserName=data['UserName']).first()
+    user_account = UserAccount.query.filter_by(UserName=data['username']).first()
     if not user_account:
         try: 
+            password = '123456'
             user_account_id = UserAccountService.save_user_account(UserAccount(
-                UserName = data['UserName'],
-                password = data['Password']
+                UserName = data['username'],
+                password = password
             ))
 
             payment_account_id = PaymentAccountService.save_payment_account(PaymentAccount(
@@ -36,7 +37,7 @@ def save_new_customer(data):
                 #     'status' : 'success',
                 #     'message': 'Success create customer'
                 # }
-                return ResponseService.response('success', 200, new_customer), 201
+                return ResponseService().response('success', 200, data), 201
         except:
             db.session.rollback()
 
@@ -50,16 +51,19 @@ def save_new_customer(data):
         return response_object, 409
 
 def update_customer(data):
-    customer = Customer.query.filter_by(CustomerId=data['CustomerId']).first()
+    customer = Customer.query.filter_by(CustomerId=data['id']).first()
     if customer:
         try: 
-            customer.CustomerName = data['CustomerName']
+            customer.CustomerName = data['customername']
+            customer.Nickname = data['nickname']
+            customer.Phone = data['phone']
+
             db.session.commit()
             response_object = {
                 'status' : 'success',
                 'message': 'Success update customer'
             }
-            return ResponseService.response('success', 200, customer), 201
+            return ResponseService().response('success', 200, data), 201
             # return response_object, 201
         except:
             db.session.rollback()
@@ -76,13 +80,15 @@ def update_customer(data):
    
 
 def get_all_customer():
+    print(1111)
     list_customer = Customer.query.all()
-    return ResponseService.response('success', 200, list_customer), 201
+    print(list_customer)
+    return ResponseService().response('success', 200, list_customer), 201
     # return Customer.query.all()
 
 def get_customer(id):
     customer = Customer.query.filter_by(CustomerId=id).first()
-    return ResponseService.response('success', 200, customer), 201
+    return ResponseService().response('success', 200, customer), 201
     # return Customer.query.filter_by(CustomerId=id).first()
 
 def save_changes(data):

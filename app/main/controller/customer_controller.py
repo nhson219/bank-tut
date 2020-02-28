@@ -22,11 +22,6 @@ class CustomerList(Resource):
     @api.doc('create customer')
     @api.expect(_customer_add, validate=True)
     def post(self):
-<<<<<<< HEAD
-        print(request.json)
-=======
-        print(_customer_add)
->>>>>>> b621b92bfe5dd1a35c99109e48dc3eb66243b8cf
         data = request.json
         return save_new_customer(data=data)
 
@@ -46,6 +41,5 @@ class User(Resource):
     @api.doc('get a Customer')
     @api.marshal_with(_customer_get)
     def get(self, customer_id):
-        data = request.json
         return get_customer(customer_id)        
   
