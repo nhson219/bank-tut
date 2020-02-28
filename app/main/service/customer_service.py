@@ -7,6 +7,7 @@ from app.main.model.user_account import UserAccount
 from app.main.model.payment_account import PaymentAccount
 from app.main.service.user_account_service import UserAccountService
 from app.main.service.payment_account_service import PaymentAccountService
+from app.main.service.response_service import ResponseService
 
 def save_new_customer(data):
     user_account = UserAccount.query.filter_by(UserName=data['UserName']).first()
@@ -31,11 +32,11 @@ def save_new_customer(data):
                     Email = data['email'],
                 )
                 save_changes(new_customer)
-                response_object = {
-                    'status' : 'success',
-                    'message': 'Success create customer'
-                }
-                return response_object, 201
+                # response_object = {
+                #     'status' : 'success',
+                #     'message': 'Success create customer'
+                # }
+                return ResponseService.response('success', 200, new_customer), 201
         except:
             db.session.rollback()
 
@@ -58,7 +59,8 @@ def update_customer(data):
                 'status' : 'success',
                 'message': 'Success update customer'
             }
-            return response_object, 201
+            return ResponseService.response('success', 200, customer), 201
+            # return response_object, 201
         except:
             db.session.rollback()
 
@@ -74,10 +76,14 @@ def update_customer(data):
    
 
 def get_all_customer():
-    return Customer.query.all()
+    list_customer = Customer.query.all()
+    return ResponseService.response('success', 200, list_customer), 201
+    # return Customer.query.all()
 
 def get_customer(id):
-    return Customer.query.filter_by(CustomerId=id).first()
+    customer = Customer.query.filter_by(CustomerId=id).first()
+    return ResponseService.response('success', 200, customer), 201
+    # return Customer.query.filter_by(CustomerId=id).first()
 
 def save_changes(data):
     db.session.add(data)
