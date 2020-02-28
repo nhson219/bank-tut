@@ -6,7 +6,7 @@ from ..service.customer_service import save_new_customer, get_all_customer, get_
 
 api = CustomerDto.api
 _customer_get = CustomerDto.customer_get
-_customer_add = CustomerDto.customer_get
+_customer_add = CustomerDto.customer_add
 _customer_update = CustomerDto.customer_update
 
 @api.route('/')
@@ -22,6 +22,7 @@ class CustomerList(Resource):
     @api.doc('create customer')
     @api.expect(_customer_add, validate=True)
     def post(self):
+        print(request.json)
         data = request.json
         return save_new_customer(data=data)
 

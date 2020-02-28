@@ -18,12 +18,13 @@ class CustomerDto:
         'CreatedDate': fields.DateTime(required=True, description='Customer created at'),
     })
     customer_add = api.model('customer', {
-        'CustomerName': fields.String(required=True, description='Customer name'),
-        'UserName': fields.String(required=True, description='Customer UserName'),
-        'Password': fields.String(required=True, description='Customer Password'),
-        'Nickname': fields.String(required=True, description='Customer nickname'),
+        'customername': fields.String(required=True, description='Customer name'),
+        'username': fields.String(required=True, description='Customer UserName'),
+        'nickname': fields.String(required=True, description='Customer nickname'),
+        'phone': fields.String(required=True, description='Customer nickname'),
+        'email': fields.String(required=True, description='Customer nickname'),
     })
     customer_update = api.model('customer', {
-        'CustomerId': fields.Integer(required=True, description='customer id'),
-        'CustomerName': fields.String(required=True, description='Customer name'),
+        'customerid': fields.Integer(required=True, description='customer id'),
+        'customername': fields.String(required=True, description='Customer name'),
     })     

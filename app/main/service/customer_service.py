@@ -23,10 +23,12 @@ def save_new_customer(data):
             
             if user_account_id and payment_account_id:
                 new_customer = Customer(
-                    CustomerName = data['CustomerName'],
+                    CustomerName = data['customername'],
                     UserAccountId = user_account_id,
                     PaymentAccount = payment_account_id,
-                    Nickname = data['Nickname']
+                    Nickname = data['nickname'],
+                    Phone = data['phone'],
+                    Email = data['email'],
                 )
                 save_changes(new_customer)
                 response_object = {
