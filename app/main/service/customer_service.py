@@ -81,18 +81,18 @@ def update_customer(data):
    
 
 def get_all_customer():
-    print(1111)
     list_customer = Customer.query.all()
-    print(list_customer)
     return ResponseService().response('success', 200, list_customer), 201
     # return Customer.query.all()
 
 def get_customer(id):
     customer = Customer.query.filter_by(CustomerId=id).first()
-    # data = {
-    #     'CustomerName' : customer.CustomerName
-    # }
-    return ResponseService().response('success', 200, json.dumps(customer)), 201
+    data = {
+        'name' : customer.CustomerName,
+        'phone': customer.Phone,
+        'email': customer.Email
+    }
+    return ResponseService().response('success', 200, data), 201
     # return Customer.query.filter_by(CustomerId=id).first()
 
 def save_changes(data):
