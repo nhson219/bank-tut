@@ -8,6 +8,7 @@ from app.main.model.payment_account import PaymentAccount
 from app.main.service.user_account_service import UserAccountService
 from app.main.service.payment_account_service import PaymentAccountService
 from app.main.service.response_service import ResponseService
+import json
 
 def save_new_customer(data):
     user_account = UserAccount.query.filter_by(UserName=data['username']).first()
@@ -88,7 +89,10 @@ def get_all_customer():
 
 def get_customer(id):
     customer = Customer.query.filter_by(CustomerId=id).first()
-    return ResponseService().response('success', 200, customer), 201
+    # data = {
+    #     'CustomerName' : customer.CustomerName
+    # }
+    return ResponseService().response('success', 200, json.dumps(customer)), 201
     # return Customer.query.filter_by(CustomerId=id).first()
 
 def save_changes(data):

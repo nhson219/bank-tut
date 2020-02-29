@@ -39,7 +39,7 @@ class CustomerList(Resource):
 @api.response(404, 'Customer not found.')
 class User(Resource):
     @api.doc('get a Customer')
-    @api.marshal_with(_customer_get)
+    # @api.marshal_with(_customer_get)
     def get(self, customer_id):
         return get_customer(customer_id)        
   
