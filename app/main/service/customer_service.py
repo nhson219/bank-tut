@@ -9,6 +9,8 @@ from app.main.service.user_account_service import UserAccountService
 from app.main.service.payment_account_service import PaymentAccountService
 from app.main.service.response_service import ResponseService
 import json
+from flask import jsonify
+
 
 def save_new_customer(data):
     user_account = UserAccount.query.filter_by(UserName=data['username']).first()
@@ -82,6 +84,8 @@ def update_customer(data):
 
 def get_all_customer():
     list_customer = Customer.query.all()
+    #print(jsonify(list_customer))
+    print('---' + list_customer[0].CustomerName)
     return ResponseService().response('success', 200, list_customer), 201
     # return Customer.query.all()
 

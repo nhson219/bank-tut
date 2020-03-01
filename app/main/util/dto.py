@@ -15,9 +15,9 @@ class CustomerDto:
     api = Namespace('customer', description='customer related operations')
     customer_get = api.model('customer', {
         'CustomerName': fields.String(required=True, description='Customer name'),
-        'nickname': fields.String(required=True, description='Customer nickname'),
-        'email': fields.String(required=True, description='Customer email'),
-        'phone': fields.String(required=True, description='Customer phone'),
+        'Nickname': fields.String(required=True, description='Customer nickname'),
+        'Email': fields.String(required=True, description='Customer email'),
+        'Phone': fields.String(required=True, description='Customer phone'),
         'CreatedDate': fields.DateTime(required=True, description='Customer created at'),
     })
     customer_add = api.model('customer', {

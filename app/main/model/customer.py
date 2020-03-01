@@ -14,6 +14,6 @@ class Customer(db.Model):
     Phone = db.Column(db.String(255))
     Email = db.Column(db.String(255))
 
-    @property
-    def __repr__(self):
-        return json.dumps(self, default=jsonDefault, indent=4)
+    # @property
+    # def __repr__(self):
+    #     return "<Customer '{}'>".format(self.CustomerName)

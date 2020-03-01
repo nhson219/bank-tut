@@ -12,7 +12,7 @@ _customer_update = CustomerDto.customer_update
 @api.route('/')
 class CustomerList(Resource):
     @api.doc('list_of_register_customer')
-    @api.marshal_list_with(_customer_get, envelope='data')
+    # @api.marshal_list_with(_customer_get, envelope='data')
     def get(self):
         return get_all_customer()
 
