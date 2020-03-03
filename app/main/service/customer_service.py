@@ -34,6 +34,8 @@ def save_new_customer(data):
                     Nickname = data['nickname'],
                     Phone = data['phone'],
                     Email = data['email'],
+                    Address = data['address'],
+                    Gender = data['gender']
                 )
                 save_changes(new_customer)
                 # response_object = {
@@ -60,6 +62,9 @@ def update_customer(data):
             customer.CustomerName = data['customername']
             customer.Nickname = data['nickname']
             customer.Phone = data['phone']
+            customer.Address = data['address']
+            customer.Email = data['email']
+            customer.Gender = data['gender']
 
             db.session.commit()
             response_object = {
@@ -94,7 +99,11 @@ def get_customer(id):
     data = {
         'name' : customer.CustomerName,
         'phone': customer.Phone,
-        'email': customer.Email
+        'email': customer.Email,
+        'id' : customer.CustomerId,
+        'address': customer.Address,
+        'gender' : customer.Gender,
+        'nickname' : customer.Nickname,
     }
     return ResponseService().response('success', 200, data), 201
     # return Customer.query.filter_by(CustomerId=id).first()

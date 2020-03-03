@@ -13,6 +13,8 @@ class Customer(db.Model):
     Nickname = db.Column(db.String(255))
     Phone = db.Column(db.String(255))
     Email = db.Column(db.String(255))
+    Address = db.Column(db.String(255))
+    Gender = db.Column(db.Integer, default=0)
 
     # @property
     # def __repr__(self):
