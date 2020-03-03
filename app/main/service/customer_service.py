@@ -10,6 +10,8 @@ from app.main.service.payment_account_service import PaymentAccountService
 from app.main.service.response_service import ResponseService
 import json
 from flask import jsonify
+from sqlalchemy.orm import joinedload
+
 
 
 def save_new_customer(data):
@@ -88,14 +90,14 @@ def update_customer(data):
    
 
 def get_all_customer():
-    list_customer = Customer.query.all()
+    list_customer = Customer.query.options(joinedload('user_account'))
     #print(jsonify(list_customer))
     print('---' + list_customer[0].CustomerName)
     return ResponseService().response('success', 200, list_customer), 201
     # return Customer.query.all()
 
 def get_customer(id):
-    customer = Customer.query.filter_by(CustomerId=id).first()
+    customer = Customer.query.filter_by(CustomerId=id).options(joinedload('user_account')).first()
     data = {
         'name' : customer.CustomerName,
         'phone': customer.Phone,
@@ -104,6 +106,8 @@ def get_customer(id):
         'address': customer.Address,
         'gender' : customer.Gender,
         'nickname' : customer.Nickname,
+        'username' : customer.user_account.UserName,
+        'amount' : customer.payment_account.Amount
     }
     return ResponseService().response('success', 200, data), 201
     # return Customer.query.filter_by(CustomerId=id).first()
