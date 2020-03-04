@@ -25,3 +25,17 @@ class Customer(db.Model):
     # @property
     # def __repr__(self):
     #     return "<Customer '{}'>".format(self.CustomerName)
+
+    @property
+    def serialize(self):
+        return {
+            "id" : self.CustomerId,
+            "name" : self.CustomerName,
+            "nickname" : self.Nickname,
+            "phone" : self.Phone,
+            "email" : self.Email,
+            "address" : self.Address,
+            "gender" : self.Gender,
+            'amount' : self.payment_account.Amount,
+            'number_payment' : self.payment_account.NumberPaymentAccount,
+        }

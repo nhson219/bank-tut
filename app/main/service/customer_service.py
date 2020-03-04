@@ -92,8 +92,12 @@ def update_customer(data):
 def get_all_customer():
     list_customer = Customer.query.options(joinedload('user_account'))
     #print(jsonify(list_customer))
-    print('---' + list_customer[0].CustomerName)
-    return ResponseService().response('success', 200, list_customer), 201
+    tmp = [1 for i in list_customer]
+    print(tmp)
+    print(jsonify(json_list=[i.serialize for i in list_customer]))
+    print('****')
+    return jsonify(data=[i.serialize for i in list_customer])
+    #return ResponseService().response('success', 200, jsonify(json_list=[i.serialize for i in list_customer])), 201
     # return Customer.query.all()
 
 def get_customer(id):
