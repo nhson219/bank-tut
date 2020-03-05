@@ -114,12 +114,19 @@ def get_customer(id):
 
 def get_customer_by_number_payment(number_payment):
     payment_account = PaymentAccount.query.filter_by(NumberPaymentAccount=number_payment).first()
-    customer = Customer.query.filter_by(PaymentAccount=payment_account.PaymentAccountId).options(joinedload('payment_account')).first()
-    data = {
-        'name' : customer.CustomerName,
-        'number_payment': customer.payment_account.NumberPaymentAccount,
-    }
-    return ResponseService().response('success', 200, data), 201
+    if payment_account:
+        customer = Customer.query.filter_by(PaymentAccount=payment_account.PaymentAccountId).options(joinedload('payment_account')).first()
+        data = {
+            'name' : customer.CustomerName,
+            'number_payment': customer.payment_account.NumberPaymentAccount,
+        }
+        return ResponseService().response('success', 200, data), 201
+    else: 
+        response_object = {
+            'status' : 'fail',
+            'message': 'Customer not exists. Please try again'
+        }
+        return response_object, 409         
 
 def save_changes(data):
     db.session.add(data)
