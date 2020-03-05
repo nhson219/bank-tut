@@ -11,8 +11,7 @@ from app.main.service.response_service import ResponseService
 import json
 from flask import jsonify
 from sqlalchemy.orm import joinedload
-
-
+from random import randint
 
 def save_new_customer(data):
     user_account = UserAccount.query.filter_by(UserName=data['username']).first()
@@ -25,7 +24,8 @@ def save_new_customer(data):
             ))
 
             payment_account_id = PaymentAccountService.save_payment_account(PaymentAccount(
-                Amount = 0 # init amount = 0
+                Amount = 0, # init amount = 0,
+                NumberPaymentAccount = randint(1000000000, 9999999999)
             ))
             
             if user_account_id and payment_account_id:
@@ -91,11 +91,6 @@ def update_customer(data):
 
 def get_all_customer():
     list_customer = Customer.query.options(joinedload('user_account'))
-    #print(jsonify(list_customer))
-    tmp = [1 for i in list_customer]
-    print(tmp)
-    print(jsonify(json_list=[i.serialize for i in list_customer]))
-    print('****')
     return jsonify(data=[i.serialize for i in list_customer])
     #return ResponseService().response('success', 200, jsonify(json_list=[i.serialize for i in list_customer])), 201
     # return Customer.query.all()
@@ -111,10 +106,20 @@ def get_customer(id):
         'gender' : customer.Gender,
         'nickname' : customer.Nickname,
         'username' : customer.user_account.UserName,
-        'amount' : customer.payment_account.Amount
+        'amount' : customer.payment_account.Amount,
+        'number_payment': customer.payment_account.NumberPaymentAccount,
     }
     return ResponseService().response('success', 200, data), 201
     # return Customer.query.filter_by(CustomerId=id).first()
+
+def get_customer_by_number_payment(number_payment):
+    payment_account = PaymentAccount.query.filter_by(NumberPaymentAccount=number_payment).first()
+    customer = Customer.query.filter_by(PaymentAccount=payment_account.PaymentAccountId).options(joinedload('payment_account')).first()
+    data = {
+        'name' : customer.CustomerName,
+        'number_payment': customer.payment_account.NumberPaymentAccount,
+    }
+    return ResponseService().response('success', 200, data), 201
 
 def save_changes(data):
     db.session.add(data)

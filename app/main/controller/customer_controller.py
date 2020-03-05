@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import CustomerDto
-from ..service.customer_service import save_new_customer, get_all_customer, get_customer, update_customer
+from ..service.customer_service import save_new_customer, get_all_customer, get_customer, update_customer, get_customer_by_number_payment
 
 api = CustomerDto.api
 _customer_get = CustomerDto.customer_get
@@ -42,4 +42,15 @@ class User(Resource):
     # @api.marshal_with(_customer_get)
     def get(self, customer_id):
         return get_customer(customer_id)        
+
+@api.route('/number_payment/<int:number_payment>')
+@api.param('number_payment', 'number_payment')
+@api.response(404, 'Customer not found.')
+class User(Resource):
+    @api.doc('get a Customer')
+    # @api.marshal_with(_customer_get)
+    def get(self, number_payment):
+        return get_customer_by_number_payment(number_payment)          
+  
+
   
