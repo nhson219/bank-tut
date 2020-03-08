@@ -57,7 +57,13 @@ def save_changes(data):
 def get_customer_store_by_customer_id(customer_id):
     customer_store = CustomerStore.query.filter_by(CustomerId=customer_id).all()
     customer = Customer.query.filter_by(CustomerId=customer_id).first()
-    print(customer_store[1].customer_store.CustomerName)
-    return jsonify(data=[i.serialize for i in customer_store])   
-    # return True
+    #print(customer_store[1].customer_store.CustomerName)
+    if customer:
+        return jsonify(data=[i.serialize for i in customer_store])   
+    else:
+        response_object = {
+                'status' : 'success',
+                'message': 'No data'
+        }
+        return response_object, 404         
 
