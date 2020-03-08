@@ -16,3 +16,4 @@ api = Api(blueprint,
 
 api.add_namespace(user_ns, path='/user')
 api.add_namespace(customer_ns, path='/customer')
+#api.add_resource(CustomerStore, '/customer_store')

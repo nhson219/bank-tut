@@ -32,4 +32,6 @@ class CustomerDto:
         'customername': fields.String(required=True, description='Customer name'),
         'nickname': fields.String(required=True, description='Customer nickname'),
         'phone': fields.String(required=True, description='Customer phone'),
-    })     
+    })   
+
+    

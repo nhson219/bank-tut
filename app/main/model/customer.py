@@ -20,7 +20,9 @@ class Customer(db.Model):
         backref=db.backref('customer', lazy=True))
 
     payment_account = db.relationship('PaymentAccount',
-        backref=db.backref('customer', lazy=True))        
+        backref=db.backref('customer', lazy=True))     
+
+    #customer_store = db.relationship("CustomerStore", backref="customer")           
 
     # @property
     # def __repr__(self):
