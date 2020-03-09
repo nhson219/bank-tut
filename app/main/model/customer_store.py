@@ -7,6 +7,7 @@ class CustomerStore(db.Model):
     Id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     CustomerId = db.Column(db.Integer, db.ForeignKey('customer.CustomerId'))
     CustomerStoreId = db.Column(db.Integer, db.ForeignKey('customer.CustomerId'))
+    NameStore = db.Column(db.String(255))
     CreatedDate = db.Column(db.DateTime)
     
 
@@ -19,5 +20,6 @@ class CustomerStore(db.Model):
             "customer_id" : self.CustomerId,
             "customer_name": self.customer.CustomerName,
             "customer_store_id": self.customer_store.CustomerId,
-            "customer_store_name": self.customer_store.CustomerName
+            "customer_store_name": self.NameStore,
+            "customer_store_number_payment": self.customer_store.payment_account.NumberPaymentAccount
         }
