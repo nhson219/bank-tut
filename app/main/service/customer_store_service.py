@@ -18,24 +18,40 @@ def save_new_customer_store(data):
     if data['customer_id'] != data['customer_store_id']:
         customer = Customer.query.filter_by(CustomerId=data['customer_id']).first()
         customer_store = Customer.query.filter_by(CustomerId=data['customer_store_id']).first()
-        check_customer_store = CustomerStore.query.filter_by(CustomerId=data['customer_id'], CustomerStoreId=data['customer_store_id']).first()
-        if (customer and customer_store) and not check_customer_store:
-            try: 
-                new_customer_store = CustomerStore(
-                    CustomerId= data['customer_id'],
-                    CustomerStoreId= data['customer_store_id'],
-                )
-                save_changes(new_customer_store)
-                    # response_object = {
-                    #     'status' : 'success',
-                    #     'message': 'Success create customer'
-                    # }
-                return ResponseService().response('success', 200, data), 201
-            except:
-                db.session.rollback()
+        customer_store_current = CustomerStore.query.filter_by(CustomerId=data['customer_id'], CustomerStoreId=data['customer_store_id']).first()
+        if (customer and customer_store):
+            if not customer_store_current:
+                try: 
+                    new_customer_store = CustomerStore(
+                        CustomerId= data['customer_id'],
+                        CustomerStoreId= data['customer_store_id'],
+                        NameStore=data['name_store']
+                    )
+                    save_changes(new_customer_store)
+                        # response_object = {
+                        #     'status' : 'success',
+                        #     'message': 'Success create customer'
+                        # }
+                    return ResponseService().response('success', 200, data), 201
+                except:
+                    db.session.rollback()
 
-            finally:
-                db.session.close()  
+                finally:
+                    db.session.close()  
+            else:
+                customer_store_current.NameStore = data['name_store']
+                try:
+                    db.session.commit()
+                    response_object = {
+                        'status' : 'success',
+                        'message': 'Success update customer store'
+                    }
+                    return ResponseService().response('success', 200, data), 201
+                except:
+                    db.session.rollback()
+
+                finally:
+                    db.session.close()    
         else:
             response_object = {
                 'status' : 'fail',

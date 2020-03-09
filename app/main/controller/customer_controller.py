@@ -59,7 +59,6 @@ class CustomerStoreInfo(Resource):
     @api.doc('get a Customer store')
     # @api.marshal_with(_customer_get)
     def get(self, customer_id):
-        print(customer_id)
         return get_customer_store_by_customer_id(customer_id)  
 
 @api.route('/customer_store/')
