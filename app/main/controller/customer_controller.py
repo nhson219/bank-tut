@@ -7,7 +7,7 @@ from ..service.customer_store_service import get_customer_store_by_customer_id, 
 
 api = CustomerDto.api
 _customer_get = CustomerDto.customer_get
-_customer_add = CustomerAddDto.customer_add
+_customer_add = CustomerDto.customer_add
 _customer_update = CustomerDto.customer_update
 
 @api.route('/')
