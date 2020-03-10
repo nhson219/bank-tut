@@ -1,12 +1,13 @@
 from flask import request
-from flask_restplus import Resource
+from flask_restplus import Resource, Namespace, fields
 
 from ..util.dto import CustomerDto
+from ..util.dto import CustomerAddDto
 from ..service.customer_service import save_new_customer, get_all_customer, get_customer, update_customer
 
 api = CustomerDto.api
 _customer_get = CustomerDto.customer_get
-_customer_add = CustomerDto.customer_add
+_customer_add = CustomerAddDto.customer_add
 _customer_update = CustomerDto.customer_update
 
 @api.route('/')
@@ -18,11 +19,10 @@ class CustomerList(Resource):
 
     
 
-    @api.response(201, 'customer successfully created')    
+    @api.response(201, 'customer successfully created')
     @api.doc('create customer')
     @api.expect(_customer_add, validate=True)
     def post(self):
-        print(_customer_add)
         data = request.json
         return save_new_customer(data=data)
 

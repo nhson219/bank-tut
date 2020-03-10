@@ -17,24 +17,15 @@ class CustomerDto:
         'CustomerName': fields.String(required=True, description='Customer name'),
         'CreatedDate': fields.DateTime(required=True, description='Customer created at'),
     })
-    customer_add = api.model('customer', {
-        'CustomerName': fields.String(required=True, description='Customer name'),
-        'UserName': fields.String(required=True, description='Customer UserName'),
-        'Password': fields.String(required=True, description='Customer Password'),
-        'Nickname': fields.String(required=True, description='Customer nickname'),
-    })
+    
     customer_update = api.model('customer', {
         'CustomerId': fields.Integer(required=True, description='customer id'),
         'CustomerName': fields.String(required=True, description='Customer name'),
     })
-    # customer_add = api.model('customer', {
-    #     'CustomerName': fields.String(required=True, description='Customer name'),
-    #     'UserName': fields.String(required=True, description='Customer UserName'),
-    #     'Password': fields.String(required=True, description='Customer Password'),
-    # })    
-    customer_get = api.model('customer', {
+class CustomerAddDto:
+    api = Namespace('customer', description='customer related operations')
+    customer_add = api.model('customer', {
         'CustomerName': fields.String(required=True, description='Customer name'),
-        'CreatedDate': fields.DateTime(required=True, description='Customer created at'),
-    }) 
-    customer_add = api.parser()
-    customer_add.add_argument('UserName', type=int)
+        'UserName': fields.String(required=True, description='Customer UserName'),
+        'Nickname': fields.String(required=True, description='Customer nickname'),
+    })

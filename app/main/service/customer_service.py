@@ -8,14 +8,17 @@ from app.main.model.payment_account import PaymentAccount
 from app.main.service.user_account_service import UserAccountService
 from app.main.service.payment_account_service import PaymentAccountService
 from app.main.service.response_service import ResponseService
+import json
+
 
 def save_new_customer(data):
     user_account = UserAccount.query.filter_by(UserName=data['UserName']).first()
     if not user_account:
         try: 
+            password = '123456'
             user_account_id = UserAccountService.save_user_account(UserAccount(
                 UserName = data['UserName'],
-                password = data['Password']
+                password = password
             ))
 
             payment_account_id = PaymentAccountService.save_payment_account(PaymentAccount(
@@ -29,12 +32,15 @@ def save_new_customer(data):
                     PaymentAccount = payment_account_id,
                     Nickname = data['Nickname']
                 )
-                save_changes(new_customer)
-                # response_object = {
-                #     'status' : 'success',
-                #     'message': 'Success create customer'
-                # }
-                return ResponseService.response('success', 200, new_customer), 201
+                result = save_changes(new_customer)
+                print(result)
+                response_object = {
+                    'status' : 'success',
+                    'message': 'Success create customer'
+                }
+                tmp = ResponseService()
+                tmp.test()
+                return tmp.response('success', 200, response_object), 201
         except:
             db.session.rollback()
 
@@ -86,4 +92,5 @@ def get_customer(id):
 def save_changes(data):
     db.session.add(data)
     db.session.commit()    
+    return data
 
