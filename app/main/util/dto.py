@@ -34,4 +34,13 @@ class CustomerDto:
         'phone': fields.String(required=True, description='Customer phone'),
     })   
 
+class PaymentDto:
+    api = Namespace('payment', description='payment related operations')
+    
+
+    payment_add = api.model('payment_account', {
+        # 'id': fields.Integer(required=True, description='customer id'),
+        'number_payment_or_user_name': fields.String(required=True, description='number paymenr or user name'),
+        'amount': fields.Integer(required=True, description='amount'),
+    })  
     

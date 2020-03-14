@@ -5,6 +5,7 @@ from flask import Blueprint
 
 from .main.controller.user_controller import api as user_ns
 from .main.controller.customer_controller import api as customer_ns
+from .main.controller.payment_controller import api as payment_ns
 
 blueprint = Blueprint('api', __name__)
 
@@ -16,4 +17,5 @@ api = Api(blueprint,
 
 api.add_namespace(user_ns, path='/user')
 api.add_namespace(customer_ns, path='/customer')
+api.add_namespace(payment_ns, path='/payment')
 #api.add_resource(CustomerStore, '/customer_store')
