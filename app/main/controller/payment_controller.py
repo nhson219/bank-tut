@@ -16,10 +16,11 @@ class Payment(Resource):
         data = request.json
         return add_payment(data=data)               
   
-
-    @api.response(201, 'create transaction')
+@api.route('/transaction')
+class PaymentTransaction(Resource):
+    
     @api.doc('create customer')
-    @api.expect(_customer_add, validate=True)
+    @api.expect(payment_add)
     def post(self):
         data = request.json
         return create_transaction(data=data)

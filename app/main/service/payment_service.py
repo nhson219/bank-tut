@@ -72,9 +72,25 @@ def add_payment(data):
         }
         return response_object, 409    
 def create_transaction(data):
-    customer = Customer.query.filter_by(CustomerId=data['customer_id']).options(joinedload('user_account')).first()
-    customer_receive = Customer.query.filter_by(CustomerId=data['customer_receive_id']).options(joinedload('user_account')).first()                                         
+    customer = Customer.query.filter_by(CustomerId=data['customer_id']).options(joinedload('payment_account')).first()
+    customer_receive = Customer.query.filter_by(CustomerId=data['customer_receive_id']).options(joinedload('payment_account')).first()                                         
                 
     if customer and customer_receive:
-        print(customer)
-        print(customer_receive)
+        if data['amount'] < customer.payment_account.Amount and data['amount'] > 0:
+            print(customer.payment_account.Amount)
+            print(customer_receive.payment_account.Amount)
+            
+            customer_amount = customer.payment_account.Amount # set amount of customer send
+            customer_receive_amount = customer_receive.payment_account.Amount # set amount of customer will receive
+            customer.payment_account.Amount = customer_amount - data['amount']
+            customer_receive.payment_account.Amount = customer_receive_amount + data['amount']
+
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
+            finally:
+                db.session.close()                 
+
+            print(customer.payment_account.Amount)
+            print(customer_receive.payment_account.Amount)
