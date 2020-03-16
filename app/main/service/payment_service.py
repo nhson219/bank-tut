@@ -70,6 +70,11 @@ def add_payment(data):
             'status' : 'fail',
             'message': 'Update amount fail. Please try again'
         }
-        return response_object, 409                             
+        return response_object, 409    
+def create_transaction(data):
+    customer = Customer.query.filter_by(CustomerId=data['customer_id']).options(joinedload('user_account')).first()
+    customer_receive = Customer.query.filter_by(CustomerId=data['customer_receive_id']).options(joinedload('user_account')).first()                                         
                 
-                
+    if customer and customer_receive:
+        print(customer)
+        print(customer_receive)
