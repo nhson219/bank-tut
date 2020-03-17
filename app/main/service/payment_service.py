@@ -77,20 +77,33 @@ def create_transaction(data):
                 
     if customer and customer_receive:
         if data['amount'] < customer.payment_account.Amount and data['amount'] > 0:
-            print(customer.payment_account.Amount)
-            print(customer_receive.payment_account.Amount)
-            
+
             customer_amount = customer.payment_account.Amount # set amount of customer send
             customer_receive_amount = customer_receive.payment_account.Amount # set amount of customer will receive
             customer.payment_account.Amount = customer_amount - data['amount']
             customer_receive.payment_account.Amount = customer_receive_amount + data['amount']
-
+            
             try:
                 db.session.commit()
             except:
                 db.session.rollback()
             finally:
-                db.session.close()                 
+                db.session.close()  
 
-            print(customer.payment_account.Amount)
-            print(customer_receive.payment_account.Amount)
+            response_object = {
+                            'status' : 'success',
+                            'message': 'Success create transaction'
+                        }
+            return ResponseService().response('success', 200, data), 201   
+        else:
+            response_object = {
+                'status' : 'fail',
+                'message': 'Create transaction fail. Please try again'
+            }
+            return response_object, 409
+    else:
+        response_object = {
+            'status' : 'fail',
+            'message': 'Create transaction fail. Please try again'
+        }
+        return response_object, 409
