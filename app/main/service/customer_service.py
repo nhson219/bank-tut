@@ -121,7 +121,9 @@ def get_customer_by_number_payment(number_payment):
             'number_payment': customer.payment_account.NumberPaymentAccount,
             'customer_id': customer.CustomerId,
             'amount': customer.payment_account.Amount,
-            'nick_name': customer.Nickname
+            'nick_name': customer.Nickname,
+            'email': customer.Email,
+            'phone': customer.Phone
         }
         return ResponseService().response('success', 200, data), 201
     else: 
