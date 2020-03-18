@@ -115,7 +115,7 @@ def get_customer(id):
 def get_customer_by_number_payment(number_payment):
     payment_account = PaymentAccount.query.filter_by(NumberPaymentAccount=number_payment).first()
     if payment_account:
-        customer = Customer.query.filter_by(PaymentAccount=payment_account.PaymentAccountId).options(joinedload('payment_account')).first()
+        customer = Customer.query.filter_by(PaymentAccount=payment_account.PaymentAccountId).options(joinedload('payment_account')).options(joinedload('user_account')).first()
         data = {
             'name' : customer.CustomerName,
             'number_payment': customer.payment_account.NumberPaymentAccount,
@@ -123,7 +123,8 @@ def get_customer_by_number_payment(number_payment):
             'amount': customer.payment_account.Amount,
             'nick_name': customer.Nickname,
             'email': customer.Email,
-            'phone': customer.Phone
+            'phone': customer.Phone,
+            'username': customer.user_account.UserName
         }
         return ResponseService().response('success', 200, data), 201
     else: 
