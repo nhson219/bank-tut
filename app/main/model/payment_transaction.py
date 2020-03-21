@@ -5,11 +5,18 @@ class PaymentTransaction(db.Model):
 
     PaymentTransactionId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     PaymentAccountId = db.Column(db.Integer, db.ForeignKey('payment_account.PaymentAccountId'))
+    PaymentAccountReceiveId = db.Column(db.Integer, db.ForeignKey('payment_account.PaymentAccountId'))
     OtpCode = db.Column(db.Integer) 
     Amount = db.Column(db.Integer)
     Content = db.Column(db.Text)
     CreatedDate = db.Column(db.DateTime)
     UpdatedDate = db.Column(db.DateTime)
+    Status = db.Column(db.Integer)
+    SendOtpTime = db.Column(db.Integer)
+
+    TIME_EXPIRE_OTP = 120
+    STATUS_INACTIVE = 0
+    STATUS_ACTIVE = 1
 
     # @property
     # def __repr__(self):
