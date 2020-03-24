@@ -29,9 +29,9 @@ class CustomerDto:
     })
     customer_update = api.model('customer', {
         'id': fields.Integer(required=True, description='customer id'),
-        'customername': fields.String(required=True, description='Customer name'),
-        'nickname': fields.String(required=True, description='Customer nickname'),
-        'phone': fields.String(required=True, description='Customer phone'),
+        # 'customername': fields.String(required=True, description='Customer name'),
+        # 'nickname': fields.String(required=True, description='Customer nickname'),
+        # 'phone': fields.String(required=True, description='Customer phone'),
     })   
 
 class PaymentDto:

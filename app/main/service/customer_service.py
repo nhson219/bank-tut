@@ -29,7 +29,7 @@ def save_new_customer(data):
             ))
             print(payment_account_id)
             if user_account_id and payment_account_id:
-                
+                print(123)
                 new_customer = Customer(
                     CustomerName = data['customername'],
                     UserAccountId = user_account_id,
@@ -38,7 +38,7 @@ def save_new_customer(data):
                     Phone = data['phone'],
                     Email = data['email'],
                     Address = data['address'],
-                    Gender = data['gender']
+                    Gender = data["gender"]
                 )
                 save_changes(new_customer)
                 # response_object = {
@@ -68,12 +68,12 @@ def update_customer(data):
     customer = Customer.query.filter_by(CustomerId=data['id']).first()
     if customer:
         try: 
-            customer.CustomerName = data['customername']
-            customer.Nickname = data['nickname']
-            customer.Phone = data['phone']
-            customer.Address = data['address']
-            customer.Email = data['email']
-            customer.Gender = data['gender']
+            customer.CustomerName = "customername" in data and data["customername"] or customer.CustomerName
+            customer.Nickname = "nickname" in data and data["nickname"] or customer.Nickname
+            customer.Phone = "phone" in data and data['phone'] or customer.Phone
+            customer.Address = "address" in data and data['address'] or customer.Address
+            customer.Email = "email" in data and data['email'] or customer.Email
+            customer.Gender = "gender" in data and data['gender'] or customer.Gender
 
             db.session.commit()
             response_object = {
@@ -82,9 +82,9 @@ def update_customer(data):
             }
             return ResponseService().response('success', 200, data), 201
             # return response_object, 201
-        except:
+        except Exception as e:
+            #raise
             db.session.rollback()
-
         finally:
             db.session.close()  
     else:
@@ -142,7 +142,13 @@ def get_customer_by_number_payment(number_payment):
         return response_object, 409      
 
 def save_changes(data):
-    db.session.add(data)
-    db.session.commit()    
-    return data
+    try:
+        db.session.add(data)
+        db.session.commit()    
+        return data
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()        
+
 
