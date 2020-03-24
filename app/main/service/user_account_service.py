@@ -8,13 +8,13 @@ class UserAccountService:
     def save_user_account(data):
         try: 
             db.session.add(data)
-            db.session.flush()
+            #db.session.flush()
             db.session.commit()
             return data.AccountId
         except:
             db.session.rollback()
-        finally:
-            db.session.close()
+        # finally:
+            #db.session.close()
 
 # def get_all_customer():
 #     return Customer.query.all()

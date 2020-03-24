@@ -22,13 +22,14 @@ def save_new_customer(data):
                 UserName = data['username'],
                 password = password
             ))
-
+            print(user_account_id)
             payment_account_id = PaymentAccountService.save_payment_account(PaymentAccount(
                 Amount = 0, # init amount = 0,
                 NumberPaymentAccount = randint(1000000000, 9999999999)
             ))
-            
+            print(payment_account_id)
             if user_account_id and payment_account_id:
+                
                 new_customer = Customer(
                     CustomerName = data['customername'],
                     UserAccountId = user_account_id,
@@ -45,6 +46,12 @@ def save_new_customer(data):
                 #     'message': 'Success create customer'
                 # }
                 return ResponseService().response('success', 200, data), 201
+            else: 
+                response_object = {
+                    'status' : 'fail',
+                    'message': 'Create payment_account and user_account fail. Please try again'
+                }
+                return response_object, 409    
         except:
             db.session.rollback()
 

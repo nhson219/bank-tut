@@ -8,13 +8,14 @@ class PaymentAccountService:
     def save_payment_account(data):
         try: 
             db.session.add(data)
-            db.session.flush()
+            print(db.session.all())
+            #db.session.flush()
             db.session.commit()
             return data.PaymentAccountId
-        except:
+        except Exception as e:
             db.session.rollback()
-        finally:
-            db.session.close()
+        # finally:
+        #     db.session.close()
 
 # def get_all_customer():
 #     return Customer.query.all()
