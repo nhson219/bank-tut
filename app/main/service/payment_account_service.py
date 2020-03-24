@@ -8,7 +8,6 @@ class PaymentAccountService:
     def save_payment_account(data):
         try: 
             db.session.add(data)
-            print(db.session.all())
             #db.session.flush()
             db.session.commit()
             return data.PaymentAccountId
