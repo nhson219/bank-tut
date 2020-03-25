@@ -12,6 +12,7 @@ from app.main.model import customer
 from app.main.model import payment_account
 from app.main.model import customer_store
 from app.main.model import payment_transaction
+from app.main.model import payment_history
 # from app.main.model import user, blacklist
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')

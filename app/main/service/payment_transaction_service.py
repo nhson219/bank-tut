@@ -16,10 +16,11 @@ class PaymentTransactionService:
     def save_payment_transaction(data):
         try: 
             db.session.add(data)
-            db.session.flush()
+            #db.session.flush()
             db.session.commit()
-            return data.PaymentTransactionID
-        except:
+            return data.PaymentAccountId
+        except Exception as e:
+            raise
             db.session.rollback()
         # finally:
             #db.session.close()

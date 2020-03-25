@@ -90,7 +90,7 @@ def create_transaction(data):
             # create payment transaction here
             otpCode = PaymentTransactionService.generate_otp_code()
 
-            PaymentTransactionService.save_payment_transaction(PaymentTransaction(
+            tmp = PaymentTransactionService.save_payment_transaction(PaymentTransaction(
                 PaymentAccountId = data['customer_id'],
                 PaymentAccountReceiveId = data['customer_receive_id'],
                 Amount = data['amount'],
@@ -99,7 +99,6 @@ def create_transaction(data):
                 SendOtpTime = datetime.utcnow().timestamp(),
                 Status = PaymentTransaction.STATUS_INACTIVE
             ))
-            
             data_sendmail = {
                 'customer_email': customer.Email,
                 'otp_code': otpCode

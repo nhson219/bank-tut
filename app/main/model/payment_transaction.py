@@ -4,8 +4,8 @@ class PaymentTransaction(db.Model):
     __tablename__ = "payment_transaction"
 
     PaymentTransactionId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    PaymentAccountId = db.Column(db.Integer, db.ForeignKey('payment_account.PaymentAccountId'))
-    PaymentAccountReceiveId = db.Column(db.Integer, db.ForeignKey('payment_account.PaymentAccountId'))
+    PaymentAccountId = db.Column(db.Integer, db.ForeignKey('customer.CustomerId'))
+    PaymentAccountReceiveId = db.Column(db.Integer, db.ForeignKey('customer.CustomerId'))
     OtpCode = db.Column(db.Integer) 
     Amount = db.Column(db.Integer)
     Content = db.Column(db.Text)

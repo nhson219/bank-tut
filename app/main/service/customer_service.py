@@ -22,14 +22,11 @@ def save_new_customer(data):
                 UserName = data['username'],
                 password = password
             ))
-            print(user_account_id)
             payment_account_id = PaymentAccountService.save_payment_account(PaymentAccount(
                 Amount = 0, # init amount = 0,
                 NumberPaymentAccount = randint(1000000000, 9999999999)
             ))
-            print(payment_account_id)
             if user_account_id and payment_account_id:
-                print(123)
                 new_customer = Customer(
                     CustomerName = data['customername'],
                     UserAccountId = user_account_id,
