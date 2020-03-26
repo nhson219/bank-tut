@@ -11,10 +11,12 @@ from app.main.model.customer_store import CustomerStore
 from app.main.service.response_service import ResponseService
 from app.main.service.payment_transaction_service import PaymentTransactionService
 from app.main.model.payment_transaction import PaymentTransaction
+from app.main.model.payment_history import PaymentHistory
 from sqlalchemy.orm import joinedload
 import boto3
 from botocore.exceptions import ClientError
 from datetime import datetime
+from flask import jsonify
 
 
 SENDER = "nhson219@gmail.com"
@@ -220,7 +222,9 @@ def confirm_transaction(data):
         }
         return response_object, 409    
 
-
+def get_payment_history_customer(data):
+    customer = Customer.query.filter_by(CustomerId=data).options(joinedload('payment_history')).first()
+    return jsonify(data=[i.serialize for i in customer.payment_history])
 
 #def transfer_money(data):
 

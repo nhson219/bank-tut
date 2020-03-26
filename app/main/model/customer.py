@@ -22,6 +22,8 @@ class Customer(db.Model):
     payment_account = db.relationship('PaymentAccount',
         backref=db.backref('customer', lazy=True))     
 
+    payment_history = db.relationship("PaymentHistory")        
+
     #customer_store = db.relationship("CustomerStore", backref="customer")           
 
     # @property
