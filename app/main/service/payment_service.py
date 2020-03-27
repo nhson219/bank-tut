@@ -17,7 +17,7 @@ import boto3
 from botocore.exceptions import ClientError
 from datetime import datetime
 from flask import jsonify
-from sqlalchemy import case, literal_column
+from sqlalchemy import case, literal_column, func
 
 
 
@@ -256,7 +256,10 @@ def get_payment_history_customer(data):
                 ]
             ).label("content"),
             PaymentHistory.Type,
-            subquery.c.NumberPaymentAccount
+            subquery.c.NumberPaymentAccount,
+            func.IF(PaymentHistory.Type == 2, subquery.c.send, None).label("sender"),
+            func.IF(PaymentHistory.Type == 2, subquery.c.received, None).label("received"),
+            func.IF(PaymentHistory.Type == 2, subquery.c.Amount, None).label("amount"),
         )\
         .join(Customer)\
         .join(subquery, subquery.c.CustomerId == PaymentHistory.CustomerId)\
@@ -264,7 +267,7 @@ def get_payment_history_customer(data):
                     
     #tmp = get_debug_queries()
     print(result)
-    #return jsonify(data=[i.serialize for i in customer.payment_history])
+    return jsonify(data=[i.serialize for i in result])
 
 #def transfer_money(data):
 
