@@ -12,11 +12,13 @@ from app.main.service.response_service import ResponseService
 from app.main.service.payment_transaction_service import PaymentTransactionService
 from app.main.model.payment_transaction import PaymentTransaction
 from app.main.model.payment_history import PaymentHistory
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, aliased
 import boto3
 from botocore.exceptions import ClientError
 from datetime import datetime
 from flask import jsonify
+from sqlalchemy import case, literal_column
+
 
 
 SENDER = "nhson219@gmail.com"
@@ -223,8 +225,46 @@ def confirm_transaction(data):
         return response_object, 409    
 
 def get_payment_history_customer(data):
-    customer = Customer.query.filter_by(CustomerId=data).options(joinedload('payment_history')).first()
-    return jsonify(data=[i.serialize for i in customer.payment_history])
+    #customer = Customer.query.filter_by(CustomerId=data).options(joinedload('payment_history')).first()
+
+    customer_1 = aliased(Customer, name='c1')
+    customer_2 = aliased(Customer, name='c2')
+    payment_account = aliased(PaymentAccount, name='pa')
+    subquery = db.session.query(
+            customer_2.CustomerName.label("received"),
+            customer_1.CustomerName.label("send"),
+            customer_1.CustomerId,
+            PaymentTransaction.Amount,
+            payment_account.NumberPaymentAccount
+        ).filter(PaymentTransaction.Status == 1)\
+        .join(customer_1, PaymentTransaction.PaymentAccountId == customer_1.CustomerId)\
+        .join(payment_account, customer_1.PaymentAccount == payment_account.PaymentAccountId)\
+        .join(customer_2, PaymentTransaction.PaymentAccountId == customer_2.CustomerId)\
+        .subquery()
+
+    result = db.session.query(
+            case(
+                [
+                    (
+                        PaymentHistory.Type == 1,
+                        literal_column("'nap tien'")
+                    ),
+                    (
+                        PaymentHistory.Type == 2,
+                        literal_column("'chuyen tien'")
+                    ),
+                ]
+            ).label("content"),
+            PaymentHistory.Type,
+            subquery.c.NumberPaymentAccount
+        )\
+        .join(Customer)\
+        .join(subquery, subquery.c.CustomerId == PaymentHistory.CustomerId)\
+        .all()            
+                    
+    #tmp = get_debug_queries()
+    print(result)
+    #return jsonify(data=[i.serialize for i in customer.payment_history])
 
 #def transfer_money(data):
 

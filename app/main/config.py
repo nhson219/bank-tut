@@ -18,6 +18,7 @@ class DevelopmentConfig(Config):
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'flask_boilerplate_main.db')
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:Admin@123@localhost/ib_be'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ECHO = True
 
 
 class TestingConfig(Config):
