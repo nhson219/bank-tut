@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource, fields
 
 from ..util.dto import CustomerDto
-from ..service.customer_service import save_new_customer, get_all_customer, get_customer, update_customer, get_customer_by_number_payment
+from ..service.customer_service import save_new_customer, get_all_customer, get_customer, update_customer, get_customer_by_number_payment, change_password
 from ..service.customer_store_service import get_customer_store_by_customer_id, save_new_customer_store
 
 api = CustomerDto.api
@@ -72,6 +72,18 @@ class CustomerStore(Resource):
     def post(self):
         data = request.json
         return save_new_customer_store(data=data)                    
-  
+
+
+@api.route('/change_password')
+class CustomerChangePassword(Resource):        
+    @api.response(404, 'Customer not found.')
+    @api.doc('change password Customer')
+    #@api.marshal_with(_customer_store_add)
+    @api.response(201, 'change password Customer successfully')    
+    @api.doc('change password Customer')
+    #@api.expect(_customer_add)
+    def post(self):
+        data = request.json
+        return change_password(data=data)      
 
   

@@ -146,6 +146,50 @@ def save_changes(data):
     except:
         db.session.rollback()
     finally:
-        db.session.close()        
+        db.session.close()       
+
+def change_password(data):
+    customer = Customer.query.filter_by(CustomerId=data['customer_id']).first()
+
+
+    if 'customer_id' not in data or 'password' not in data or 'new_password' not in data:
+        response_object = {
+            'status' : 'fail',
+            'message': 'Customer not exists. Please try again'
+        }
+        return response_object, 409   
+
+    if customer:
+        if customer.user_account.check_password(data['password']):
+
+            try: 
+                customer.user_account.password = data['new_password']
+                db.session.commit()    
+                response_object = {
+                    'status' : 'success',
+                    'message': 'Success update customer'
+                }
+                del data['password']
+                del data['new_password']
+                return ResponseService().response('success', 200, data), 201
+                # return response_object, 201
+            except Exception as e:
+                raise
+                db.session.rollback()
+            finally:
+                db.session.close()
+        else:
+            response_object = {
+                'status' : 'fail',
+                'message': 'Old password does not match. Please try again'
+            }
+            return response_object, 409
+    else:
+        response_object = {
+            'status' : 'fail',
+            'message': 'Customer not exists. Please try again'
+        }
+        return response_object, 409             
+
 
 
