@@ -8,6 +8,9 @@ class PaymentAccount(db.Model):
     Amount = db.Column(db.Integer)
     CreatedDate = db.Column(db.DateTime)
 
+
+    #customer = db.relationship("Customer", back_populates="customer" );
+
     # @property
     # def __repr__(self):
     #     return "<PaymentAccount '{}'>".format(self.NumberPaymentAccount)

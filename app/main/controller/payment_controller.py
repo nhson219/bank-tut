@@ -6,7 +6,7 @@ from ..service.payment_service import add_payment, create_transaction, confirm_t
 
 api = PaymentDto.api
 payment_add = PaymentDto.payment_add
-@api.route('/<int:customer_id>')
+@api.route('/')
 class Payment(Resource):
 
     @api.response(201, 'add payment success')
@@ -14,13 +14,7 @@ class Payment(Resource):
     @api.expect(payment_add, validate=True)
     def post(self):
         data = request.json
-        return add_payment(data=data)    
-
-    @api.doc('list_of_register_customer')
-    @api.param('customer_id', 'The Customer identifier')
-    #@api.marshal_list_with(_customer_get, envelope='data')
-    def get(self, customer_id):
-        return get_payment_history_customer(customer_id)                  
+        return add_payment(data=data)                    
   
 @api.route('/transaction')
 class PaymentTransaction(Resource):
@@ -39,3 +33,12 @@ class PaymentTransactionConfirm(Resource):
     def post(self):
         data = request.json
         return confirm_transaction(data=data)        
+
+@api.route('/history/<int:customer_id>')
+class PaymentHistory(Resource):
+    
+    @api.doc('list_of_payment_history')
+    @api.param('customer_id', 'The Customer identifier')
+    #@api.marshal_list_with(_customer_get, envelope='data')
+    def get(self, customer_id):
+        return get_payment_history_customer(customer_id)         

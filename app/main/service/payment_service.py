@@ -18,6 +18,7 @@ from botocore.exceptions import ClientError
 from datetime import datetime
 from flask import jsonify
 from sqlalchemy import case, literal_column, func
+from app.main.service.payment_history_service import add_payment_history
 
 
 
@@ -41,8 +42,13 @@ def add_payment(data):
                 'status' : 'success',
                 'message': 'Success update amount'
             }
+
+            # add log payment
+            add_payment_history(type=PaymentHistory.ADD_AMOUNT, customer_id=payment_account.customer[0].CustomerId)
+
             return ResponseService().response('success', 200, data), 201
         except:
+            raise
             db.session.rollback()
         finally:
             db.session.close()  
@@ -60,6 +66,8 @@ def add_payment(data):
                             'status' : 'success',
                             'message': 'Success update amount'
                         }
+                        # add log payment
+                        add_payment_history(type=PaymentHistory.ADD_AMOUNT, customer_id=customer.CustomerId)
                         return ResponseService().response('success', 200, data), 201
                     except:
                         db.session.rollback()
@@ -206,6 +214,9 @@ def confirm_transaction(data):
             finally:
                 db.session.close()  
 
+            # add log history payment    
+            add_payment_history(type=PaymentHistory.SEND_AMOUNT, customer_id=data['customer_id'])
+
             response_object = {
                             'status' : 'success',
                             'message': 'Success confirm transaction'
@@ -225,8 +236,6 @@ def confirm_transaction(data):
         return response_object, 409    
 
 def get_payment_history_customer(data):
-    #customer = Customer.query.filter_by(CustomerId=data).options(joinedload('payment_history')).first()
-
     customer_1 = aliased(Customer, name='c1')
     customer_2 = aliased(Customer, name='c2')
     payment_account = aliased(PaymentAccount, name='pa')
@@ -239,7 +248,7 @@ def get_payment_history_customer(data):
         ).filter(PaymentTransaction.Status == 1)\
         .join(customer_1, PaymentTransaction.PaymentAccountId == customer_1.CustomerId)\
         .join(payment_account, customer_1.PaymentAccount == payment_account.PaymentAccountId)\
-        .join(customer_2, PaymentTransaction.PaymentAccountId == customer_2.CustomerId)\
+        .join(customer_2, PaymentTransaction.PaymentAccountReceiveId == customer_2.CustomerId)\
         .subquery()
 
     result = db.session.query(
@@ -263,11 +272,17 @@ def get_payment_history_customer(data):
         )\
         .join(Customer)\
         .join(subquery, subquery.c.CustomerId == PaymentHistory.CustomerId)\
-        .all()            
-                    
-    #tmp = get_debug_queries()
-    print(result)
-    return jsonify(data=[i.serialize for i in result])
+        .filter(PaymentHistory.CustomerId==data)\
+        .all()  
 
-#def transfer_money(data):
+    list_key = ["message", "type", "number_account", "sender", "received", "amount"]
+    dict_result = []
+    for item in result:
+        tmp_dict = {}
+        for index, child_item in enumerate(item):
+            tmp_dict[list_key[index]] = child_item
+        dict_result.append(tmp_dict)
+        
+    # return jsonify(data=[i.serialize for i in result])
+    return ResponseService().response('success', 200, dict_result), 201   
 
