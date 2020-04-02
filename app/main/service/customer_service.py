@@ -10,8 +10,12 @@ from app.main.service.payment_account_service import PaymentAccountService
 from app.main.service.response_service import ResponseService
 import json
 from flask import jsonify
+from sqlalchemy import or_
 from sqlalchemy.orm import joinedload
 from random import randint
+import jwt
+from flask_jwt_extended import create_access_token
+
 
 def save_new_customer(data):
     user_account = UserAccount.query.filter_by(UserName=data['username']).first()
@@ -189,7 +193,55 @@ def change_password(data):
             'status' : 'fail',
             'message': 'Customer not exists. Please try again'
         }
-        return response_object, 409             
+        return response_object, 409        
+
+def login(data):             
+    customer = Customer.query.options(joinedload('user_account'))\
+        .filter(or_(Customer.Email == data['email_or_username'], UserAccount.UserName==data['email_or_username'])).first()
+    print(customer.user_account.UserName)
 
 
+    auth_token = encode_auth_token(customer.CustomerId)
+    #print(auth_token.decode())
+    print(auth_token)
+    print("-----")
+    access_token = create_access_token(identity=data['email_or_username'])
+    print(access_token)
+
+    #decode_token = decode_auth_token(auth_token)
+    #print(decode_token)
+
+    # if customer:
+    #     if customer.user_account.check_password(data['password']):
+
+    #
+
+
+def encode_auth_token(customer_id):
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+                'iat': datetime.datetime.utcnow(),
+                'sub': customer_id
+            }
+            return jwt.encode(
+                payload,
+                '123456@L', # key private
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e    
+def decode_auth_token(auth_token):
+    """
+    Decodes the auth token
+    :param auth_token:
+    :return: integer|string
+    """
+    try:
+        payload = jwt.decode(auth_token, '123456@L')
+        return payload['sub']
+    except jwt.ExpiredSignatureError:
+        return 'Signature expired. Please log in again.'
+    except jwt.InvalidTokenError:
+        return 'Invalid token. Please log in again.'            
 

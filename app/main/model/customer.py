@@ -1,6 +1,7 @@
 from .. import db, flask_bcrypt
 import json
 
+
 class Customer(db.Model):
     __tablename__ = "customer"
 
@@ -29,6 +30,9 @@ class Customer(db.Model):
     # @property
     # def __repr__(self):
     #     return "<Customer '{}'>".format(self.CustomerName)
+
+
+    
 
     @property
     def serialize(self):

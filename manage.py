@@ -13,14 +13,21 @@ from app.main.model import payment_account
 from app.main.model import customer_store
 from app.main.model import payment_transaction
 from app.main.model import payment_history
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 # from app.main.model import user, blacklist
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
 app.register_blueprint(blueprint)
 
 app.app_context().push()
+app.config['JWT_SECRET_KEY'] = '123456@L'  # Change this!
+
 
 manager = Manager(app)
+jwt = JWTManager(app)
 
 migrate = Migrate(app, db, compare_type=True)
 

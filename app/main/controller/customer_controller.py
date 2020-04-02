@@ -2,8 +2,13 @@ from flask import request
 from flask_restplus import Resource, fields
 
 from ..util.dto import CustomerDto
-from ..service.customer_service import save_new_customer, get_all_customer, get_customer, update_customer, get_customer_by_number_payment, change_password
+from ..service.customer_service import save_new_customer, get_all_customer, get_customer, update_customer, get_customer_by_number_payment, change_password, login
 from ..service.customer_store_service import get_customer_store_by_customer_id, save_new_customer_store
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
+
 
 api = CustomerDto.api
 _customer_get = CustomerDto.customer_get
@@ -12,7 +17,9 @@ _customer_update = CustomerDto.customer_update
 
 @api.route('/')
 class CustomerList(Resource):
+
     @api.doc('list_of_register_customer')
+    @jwt_required
     # @api.marshal_list_with(_customer_get, envelope='data')
     def get(self):
         return get_all_customer()
@@ -75,7 +82,7 @@ class CustomerStore(Resource):
 
 
 @api.route('/change_password')
-class CustomerChangePassword(Resource):        
+class CustomerChangePassword(Resource):    
     @api.response(404, 'Customer not found.')
     @api.doc('change password Customer')
     #@api.marshal_with(_customer_store_add)
@@ -85,5 +92,17 @@ class CustomerChangePassword(Resource):
     def post(self):
         data = request.json
         return change_password(data=data)      
+
+@api.route('/login')
+class CustomerLogin(Resource):        
+    @api.response(404, 'Customer not found.')
+    @api.doc('Customer login')
+    #@api.marshal_with(_customer_store_add)
+    @api.response(201, 'Customer login successfully')    
+    @api.doc('Customer login')
+    #@api.expect(_customer_add)
+    def post(self):
+        data = request.json
+        return login(data=data)        
 
   
