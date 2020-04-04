@@ -198,22 +198,31 @@ def change_password(data):
 def login(data):             
     customer = Customer.query.options(joinedload('user_account'))\
         .filter(or_(Customer.Email == data['email_or_username'], UserAccount.UserName==data['email_or_username'])).first()
-    print(customer.user_account.UserName)
 
-
-    auth_token = encode_auth_token(customer.CustomerId)
-    #print(auth_token.decode())
-    print(auth_token)
-    print("-----")
+    # auth_token = encode_auth_token(customer.CustomerId)
     access_token = create_access_token(identity=data['email_or_username'])
-    print(access_token)
 
-    #decode_token = decode_auth_token(auth_token)
-    #print(decode_token)
-
-    # if customer:
-    #     if customer.user_account.check_password(data['password']):
-
+    if customer:
+        if customer.user_account.check_password(data['password']):
+            response_object = {
+                'status' : 'success',
+                'message': 'Success login customer',
+                'email_or_username': data['email_or_username'],
+                'access_token': access_token
+            }
+            return ResponseService().response('success', 200, response_object), 201
+        else:
+            response_object = {
+                'status' : 'fail',
+                'message': 'Password does not match. Please try again'
+            }
+            return response_object, 409    
+    else:
+            response_object = {
+                'status' : 'fail',
+                'message': 'Customer does not exist. Please try again'
+            }
+            return response_object, 409            
     #
 
 
