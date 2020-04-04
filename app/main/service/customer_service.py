@@ -14,7 +14,7 @@ from sqlalchemy import or_
 from sqlalchemy.orm import joinedload
 from random import randint
 import jwt
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity
 
 
 def save_new_customer(data):
@@ -201,6 +201,10 @@ def login(data):
 
     # auth_token = encode_auth_token(customer.CustomerId)
     access_token = create_access_token(identity=data['email_or_username'])
+    refresh_token = create_refresh_token(identity=data['email_or_username'])
+    # current_user = get_jwt_identity()
+
+    # print(current_user)
 
     if customer:
         if customer.user_account.check_password(data['password']):
@@ -208,7 +212,8 @@ def login(data):
                 'status' : 'success',
                 'message': 'Success login customer',
                 'email_or_username': data['email_or_username'],
-                'access_token': access_token
+                'access_token': access_token,
+                'refresh_token': refresh_token
             }
             return ResponseService().response('success', 200, response_object), 201
         else:
@@ -252,5 +257,7 @@ def decode_auth_token(auth_token):
     except jwt.ExpiredSignatureError:
         return 'Signature expired. Please log in again.'
     except jwt.InvalidTokenError:
-        return 'Invalid token. Please log in again.'            
+        return 'Invalid token. Please log in again.'     
+
+
 
