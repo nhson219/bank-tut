@@ -11,7 +11,7 @@ from app.main.service.response_service import ResponseService
 import json
 from flask import jsonify
 from sqlalchemy import or_
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, lazyload, subqueryload
 from random import randint
 import jwt
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity
@@ -260,8 +260,7 @@ def decode_auth_token(auth_token):
         return 'Invalid token. Please log in again.'  
 
 def get_profile_customer(customer_name):
-    customer = Customer.query.options(joinedload('user_account'))\
-        .filter(UserAccount.UserName==customer_name).first()
+    customer = Customer.query.filter(UserAccount.UserName==customer_name).join(Customer.user_account).options(subqueryload(Customer.user_account)).first()
     if customer:
         data = {
                 'name' : customer.CustomerName,
