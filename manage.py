@@ -33,6 +33,11 @@ migrate = Migrate(app, db, compare_type=True)
 
 manager.add_command('db', MigrateCommand)
 
+@jwt.user_claims_loader
+def add_claims_to_access_token(identity):
+    return {
+        'customer': identity,
+    }
 
 @manager.command
 def run():

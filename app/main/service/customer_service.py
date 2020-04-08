@@ -257,7 +257,37 @@ def decode_auth_token(auth_token):
     except jwt.ExpiredSignatureError:
         return 'Signature expired. Please log in again.'
     except jwt.InvalidTokenError:
-        return 'Invalid token. Please log in again.'     
+        return 'Invalid token. Please log in again.'  
+
+def get_profile_customer(customer_name):
+    customer = Customer.query.options(joinedload('user_account'))\
+        .filter(UserAccount.UserName==customer_name).first()
+    if customer:
+        data = {
+                'name' : customer.CustomerName,
+                'number_payment': customer.payment_account.NumberPaymentAccount,
+                'customer_id': customer.CustomerId,
+                'amount': customer.payment_account.Amount,
+                'nick_name': customer.Nickname,
+                'email': customer.Email,
+                'phone': customer.Phone,
+                'username': customer.user_account.UserName,
+                'role': {
+                    "customer": True,
+                    "employee": True,
+                    "admin": True,
+                    "any": True
+                }
+            }     
+
+        return ResponseService().response('success', 200, data), 200 
+    else:
+        response_object = {
+                'status' : 'fail',
+                'message': 'Customer does not exist. Please try again'
+            }
+        return response_object, 409        
+
 
 
 

@@ -2,12 +2,13 @@ from flask import request, jsonify, make_response
 from flask_restplus import Resource, fields
 
 from ..util.dto import CustomerDto
-from ..service.customer_service import save_new_customer, get_all_customer, get_customer, update_customer, get_customer_by_number_payment, change_password, login
+from ..service.customer_service import save_new_customer, get_all_customer, get_customer, update_customer, get_customer_by_number_payment, change_password, login, get_profile_customer
 from ..service.customer_store_service import get_customer_store_by_customer_id, save_new_customer_store
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity,
-    jwt_refresh_token_required
+    jwt_refresh_token_required,
+    get_jwt_claims
 )
 
 
@@ -115,10 +116,25 @@ class CustomerRefreshToken(Resource):
     @jwt_refresh_token_required
     def post(self):
         current_user = get_jwt_identity()
-        print(current_user)
         ret = {
             'access_token': create_access_token(identity=current_user)
         }
         return make_response(jsonify(ret), 200)
+
+@api.route('/profile')
+class CustomerProfile(Resource):        
+    @api.doc('Get customer profile')
+    #@api.marshal_with(_customer_store_add)
+    @api.response(201, 'Get customer profile successfully')    
+    @api.doc('Get customer profile')
+    @jwt_required
+    def get(self):
+        current_user = get_jwt_claims()
+        print(current_user)
+        return get_profile_customer(current_user['customer'])
+        # ret = {
+        #     'access_token': "hello"
+        # }
+        # return make_response(jsonify(ret), 200)        
 
   
