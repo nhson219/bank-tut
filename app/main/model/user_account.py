@@ -7,6 +7,7 @@ class UserAccount(db.Model):
     UserName = db.Column(db.String(255), unique=True, nullable=False)
     Password = db.Column(db.String(100))
 
+
     @property
     def password(self):
         return self.Password

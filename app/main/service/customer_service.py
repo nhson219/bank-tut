@@ -11,7 +11,7 @@ from app.main.service.response_service import ResponseService
 import json
 from flask import jsonify
 from sqlalchemy import or_
-from sqlalchemy.orm import joinedload, lazyload, subqueryload
+from sqlalchemy.orm import joinedload, lazyload, subqueryload, raiseload
 from random import randint
 import jwt
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity
@@ -196,8 +196,11 @@ def change_password(data):
         return response_object, 409        
 
 def login(data):             
-    customer = Customer.query.options(joinedload('user_account'))\
-        .filter(or_(Customer.Email == data['email_or_username'], UserAccount.UserName==data['email_or_username'])).first()
+    # customer = Customer.query.options(joinedload('user_account'))\
+    #     .filter(or_(Customer.Email == data['email_or_username'], Customer.user_account==data['email_or_username'])).first()
+
+    customer = Customer.query.join('user_account')\
+                .filter(or_(Customer.Email == data['email_or_username'], UserAccount.UserName==data['email_or_username'])).first()
 
     # auth_token = encode_auth_token(customer.CustomerId)
     access_token = create_access_token(identity=data['email_or_username'])
