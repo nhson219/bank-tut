@@ -14,7 +14,18 @@ class TransactionRemind(db.Model):
 
     STATUS_CREATED = 0
     STATUS_PAYMENT = 1
-    STATUS_DELETED = 2
+    STATUS_DELETED = -1
+
+    @property
+    def serialize(self):
+        return {
+            "id" : self.TransactionRemindId,
+            "number_payment" : self.PaymentAccountId,
+            "number_payment_receive" : self.PaymentAccountRemindId,
+            "Amount" : self.Amount,
+            "Content" : self.Content,
+            "Status" : self.Status
+        }
 
     # @property
     # def __repr__(self):

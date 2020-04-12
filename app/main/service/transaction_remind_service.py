@@ -15,7 +15,7 @@ from app.main.model.payment_history import PaymentHistory
 from sqlalchemy.orm import joinedload, aliased
 from datetime import datetime
 from flask import jsonify
-from sqlalchemy import case, literal_column, func
+from sqlalchemy import case, literal_column, func, or_, text
 from app.main.service.payment_history_service import add_payment_history
 from app.main.model.transaction_remind import TransactionRemind
 
@@ -57,3 +57,51 @@ def create_transaction_remind(data):
             'message': 'Number payment not exist. Please try again'
         }
         return response_object, 409
+
+def update_transaction_remind(data):
+    transaction_remind = TransactionRemind.query.filter_by(TransactionRemindId=data['transaction_remind_id']).first()
+
+    if transaction_remind:
+
+        try:
+            transaction_remind.Status = TransactionRemind.STATUS_DELETED
+            transaction_remind.Content = "content" in data and data['content'] or transaction_remind.Content
+
+            db.session.commit()
+            response_object = {
+                'status' : 'success',
+                'message': 'Success update customer'
+            }
+            return ResponseService().response('success', 200, data), 201
+        except Exception as e:
+            #raise
+            db.session.rollback()
+        finally:
+            db.session.close()
+    else:
+        response_object = {
+            'status' : 'fail',
+            'message': 'Transaction remind not exist. Please try again'
+        }
+        return response_object, 409              
+
+def get_transaction_remind(request):
+    args = request.args
+
+    if ("number_payment" in args or "number_payment_receive" in args) and "status" in args:
+        arg_number_payment = "number_payment" in args and args['number_payment'] or ''
+        arg_number_payment_receive = "number_payment_receive" in args and args['number_payment_receive'] or ''
+        list_transaction_remind = TransactionRemind.query\
+            .filter(or_(\
+                TransactionRemind.PaymentAccountId== arg_number_payment,\
+                TransactionRemind.PaymentAccountRemindId== arg_number_payment_receive\
+            ))\
+            .filter(TransactionRemind.Status==args['status'])\
+            .all()
+        return jsonify(data=[i.serialize for i in list_transaction_remind])  
+    else:
+        response_object = {
+            'status' : 'fail',
+            'message': 'Transaction remind not exist. Please try again'
+        }
+        return response_object, 409    

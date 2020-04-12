@@ -10,7 +10,7 @@ from flask_jwt_extended import (
     jwt_refresh_token_required,
     get_jwt_claims
 )
-from ..service.transaction_remind_service import create_transaction_remind
+from ..service.transaction_remind_service import create_transaction_remind, update_transaction_remind, get_transaction_remind
 
 api = CustomerDto.api
 _customer_get = CustomerDto.customer_get
@@ -140,14 +140,16 @@ class CustomerTransactionRemind(Resource):
     #@api.marshal_with(_customer_store_add)
     @api.response(201, 'Get customer transaction remind successfully')    
     @api.doc('Get customer transaction remind')
-    @jwt_required
+    #@jwt_required
     def get(self):
-        current_user = get_jwt_claims()
-        print(current_user)
-        return get_profile_customer(current_user['customer'])
+        print(request.args)
+        return get_transaction_remind(request)
 
     def post(self):
         data = request.json
         return create_transaction_remind(data=data)
 
   
+    def patch(self):
+        data = request.json
+        return update_transaction_remind(data=data)
