@@ -267,7 +267,7 @@ def get_profile_customer(customer_name):
     if customer:
         data = {
                 'name' : customer.CustomerName,
-                # 'number_payment': customer.payment_account.NumberPaymentAccount,
+                'number_payment': customer.payment_account.NumberPaymentAccount,
                 'customer_id': customer.CustomerId,
                 # 'amount': customer.payment_account.Amount,
                 'nick_name': customer.Nickname,
