@@ -57,7 +57,7 @@ class BankConvertUUId(Resource):
 
 @api.route('/customer')
 class BankCustomer(Resource):
-    @api.response(201, 'Get customer.')
+    @api.response(201, 'Get all customer.')
     @api.doc('Get customer')
     def get(self):
         return get_all_customer()                                               
