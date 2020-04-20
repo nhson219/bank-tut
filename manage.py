@@ -14,6 +14,7 @@ from app.main.model import customer_store
 from app.main.model import payment_transaction
 from app.main.model import payment_history
 from app.main.model import transaction_remind
+from app.main.model import bank
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
