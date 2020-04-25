@@ -43,4 +43,10 @@ class PaymentDto:
         'number_payment_or_user_name': fields.String(required=True, description='number paymenr or user name'),
         'amount': fields.Integer(required=True, description='amount'),
     })  
+
+class BankDto:
+    api = Namespace('api', description='bank related operations')
+    user = api.model('bank', {
+        'name': fields.String(required=True, description='name of bank')
+    })    
     

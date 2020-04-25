@@ -28,6 +28,7 @@ app.app_context().push()
 app.config['JWT_SECRET_KEY'] = '123456@L'  # Change this!
 
 
+
 manager = Manager(app)
 jwt = JWTManager(app)
 

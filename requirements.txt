@@ -37,6 +37,7 @@ mysqlclient==1.4.6
 pbr==5.4.4
 protobuf==3.6.1
 pycparser==2.19
+pycrypto==2.6.1
 PyJWT==1.7.1
 pylint==2.4.4
 pyrsistent==0.15.7
