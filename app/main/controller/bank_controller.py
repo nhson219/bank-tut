@@ -2,7 +2,7 @@ from flask import request, send_from_directory
 from flask_restplus import Resource
 
 from ..util.dto import BankDto
-from ..service.bank_service import save_new_bank, create_new_rsa
+from ..service.bank_service import save_new_bank, create_new_rsa, create_transaction, convert_uuid
 from constants import ROOT_PATH
 
 api = BankDto.api
@@ -36,3 +36,21 @@ class BankDownloadRSA(Resource):
 
         return send_from_directory(ROOT_PATH + '/key',
                                'public_key.pem', as_attachment=True)        
+
+@api.route('/bank/transaction')
+class BankTransac(Resource):
+    @api.response(201, 'Bank  transaction successfully created.')
+    @api.doc('Bank rsa transaction')
+    def post(self):
+        """ bank transaction """
+        data = request.json
+        return create_transaction(data)
+
+@api.route('/bank/convert')
+class BankConvertUUId(Resource):
+    @api.response(201, 'Bank convert successfully created.')
+    @api.doc('Bank convert')
+    def post(self):
+        """ bank convert """
+        data = request.json
+        return convert_uuid(data)                                       
