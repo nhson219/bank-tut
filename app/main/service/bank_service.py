@@ -128,11 +128,10 @@ def convert_uuid(data):
         public_key = RSA.importKey(read_public_key.read())
 
         # encrypt
-        uuid_encrypt = public_key.encrypt(str(data['uuid'], 'utf-8'))
-
+        uuid_encrypt = public_key.encrypt(bytes(data['uuid'], 'utf-8'), 32)
+        
         # base64 encode
-        base64_uuid = base64.b64encode(uuid_encrypt)
-
+        base64_uuid = base64.b64encode(uuid_encrypt[0])
         response_object = {
                         'status' : 'success',
                         'message': 'Success convert uuid base64',
