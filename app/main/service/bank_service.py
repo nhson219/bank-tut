@@ -13,6 +13,7 @@ from app.main.model.customer import Customer
 from app.main.model.payment_history import PaymentHistory
 from app.main.service.response_service import ResponseService
 import base64
+from app.main.model.payment_account import PaymentAccount
 
 
 def save_new_bank(data):
@@ -81,43 +82,51 @@ def create_new_rsa():
 
 
 def create_transaction(data):
-    # try: 
+    try: 
         read_private_key = open(ROOT_PATH + "/key/private_key.pem", "rb")
         private_key = RSA.importKey(read_private_key.read())
 
-        data_b64decode = base64.b64decode(b'vpOHy9a3Cw9cufiw8wyMGbgXgyeJJ2u5p4VlspjEXQvamPIkq2qLqA+/zsJYeavVR/q+203KyRZCyGeJUEoQYq8/ZbD35D2pyqkUYn3uxT7tq0aZSe50J9GysvJIdOzdesmL3awjcblYLWca3hYaLBM6mCS7QXA/UJsxcJHWHddNwqmt4e1c8SmBgcke8Wa4mOS690YM/Ny/eYUBSq+6ckJm1/E2fmRV3095ixhq2+bqdemcCNRlvrc5Se9wyV6yzWc2i5UhbPFA1eseY4xBBssNiAAe05Dr7hcOuRpYLmoEskXWcbFWetMS8BnDJIKiz4n+ffTgbzguaTipsY0locsaLksNFt+B4bPJimQp146fC3hRNxvPy25716cGxwW93NO2/1HpONUfF6z331uLBW0KRiYhJiAUQuJaxva0/p2vj3yf1hYjLkjWwAF6B2O7eFb7LOIbU6L09eDHm4cDsR4Mak3FgL1zlmFsD24XDsGLccAcMA4cGNpJ3K4SJeLboCP9VhJPEzMtR863qiKEDF07c7206bWPOfd9mVmadRyBJk6mEVgZA1PM/+XHLZFOyH5tJBXWO2bXvA44KR7Pm31mcdSdsTyphDtw7FKHaCYc1Qs6pWXQLiI/TZ64UxoYYUJyEhbT6I98toTJ08ueItUDBUWTKtPNS2aXaQ950+k=')
+        data_b64decode = base64.b64decode(bytes(data['uuid'], 'utf-8'))
+        
+        uuid = private_key.decrypt(data_b64decode)
 
-        # print(b64decode)
-        tmp = private_key.decrypt(data_b64decode)
+        bank = Bank.query.filter_by(BankId=uuid).first()
 
-        print(tmp)
+        print(bank.Name)
 
-        # customer = Customer.query.filter_by(CustomerId=data['number_account']).options(joinedload('payment_account')).first()
-        # if customer:
-        #     customer.payment_account.Amount = data['amount']
-        #     db.session.commit()
+        if bank:
+            customer = Customer.query.join('payment_account').filter(PaymentAccount.NumberPaymentAccount==data['number_account']).first()
+            if customer:
+                customer.payment_account.Amount = data['amount']
+                db.session.commit()
 
-        #     # add log history payment    
-        #     add_payment_history(type=PaymentHistory.SEND_AMOUNT, customer_id=customer.CustomerId)
+                # add log history payment    
+                add_payment_history(type=PaymentHistory.SEND_AMOUNT, customer_id=customer.CustomerId)
 
-        #     response_object = {
-        #                     'status' : 'success',
-        #                     'message': 'Success confirm transaction'
-        #                 }
-        #     return ResponseService().response('success', 200, data), 201
+                response_object = {
+                                'status' : 'success',
+                                'message': 'Success confirm transaction'
+                            }
+                return ResponseService().response('success', 200, data), 201
 
-        # else:
-        #     response_object = {
-        #         'status' : 'fail',
-        #         'message': 'Customer does not exist. Please try again'
-        #     }
-        #     return response_object, 409    
+            else:
+                response_object = {
+                    'status' : 'fail',
+                    'message': 'Customer does not exist. Please try again'
+                }
+                return response_object, 409    
+        else:
+            response_object = {
+                    'status' : 'fail',
+                    'message': 'Bank does not exist. Please try again'
+                }
+            return response_object, 409                                
 
-    # except Exception as e:
-    #     raise
-    #     db.session.rollback()
-    # finally:
-    #     db.session.close()
+    except Exception as e:
+        raise
+        db.session.rollback()
+    finally:
+        db.session.close()
 
 def convert_uuid(data):
     try:
@@ -135,7 +144,7 @@ def convert_uuid(data):
         response_object = {
                         'status' : 'success',
                         'message': 'Success convert uuid base64',
-                        'base64_uuid': base64_uuid
+                        'base64_uuid': base64_uuid.decode('utf-8')
                     }
 
         return ResponseService().response('success', 200, response_object), 201
