@@ -290,7 +290,7 @@ def get_profile_customer(customer_name):
                 'email': customer.Email,
                 'phone': customer.Phone,
                 'username': customer.user_account.UserName,
-                'role': json.JSONDecoder().decode(customer.Role)
+                'role': customer.Role is not None and json.JSONDecoder().decode(customer.Role) or ''
             }     
 
         return ResponseService().response('success', 200, data), 200 
