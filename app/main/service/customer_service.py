@@ -31,6 +31,12 @@ def save_new_customer(data):
                 NumberPaymentAccount = randint(1000000000, 9999999999)
             ))
             if user_account_id and payment_account_id:
+                role = {
+                    "customer": 'customer' in data['role'] and data['role']['customer'] or False,
+                    'employee': 'employee' in data['role'] and data['role']['employee'] or False,
+                    'admin': 'admin' in data['role'] and data['role']['admin'] or False,
+                    'any': True
+                }
                 new_customer = Customer(
                     CustomerName = data['customername'],
                     UserAccountId = user_account_id,
@@ -39,7 +45,8 @@ def save_new_customer(data):
                     Phone = data['phone'],
                     Email = data['email'],
                     Address = data['address'],
-                    Gender = data["gender"]
+                    Gender = data["gender"],
+                    Role = json.JSONEncoder().encode(role)
                 )
                 save_changes(new_customer)
                 # response_object = {
@@ -69,12 +76,21 @@ def update_customer(data):
     customer = Customer.query.filter_by(CustomerId=data['id']).first()
     if customer:
         try: 
+            role = {
+                "customer": 'customer' in data['role'] and data['role']['customer'] or False,
+                'employee': 'employee' in data['role'] and data['role']['employee'] or False,
+                'admin': 'admin' in data['role'] and data['role']['admin'] or False,
+                'any': True
+            }
+
+
             customer.CustomerName = "customername" in data and data["customername"] or customer.CustomerName
             customer.Nickname = "nickname" in data and data["nickname"] or customer.Nickname
             customer.Phone = "phone" in data and data['phone'] or customer.Phone
             customer.Address = "address" in data and data['address'] or customer.Address
             customer.Email = "email" in data and data['email'] or customer.Email
             customer.Gender = "gender" in data and data['gender'] or customer.Gender
+            customer.Role = json.JSONEncoder().encode(role)
 
             db.session.commit()
             response_object = {
@@ -274,12 +290,7 @@ def get_profile_customer(customer_name):
                 'email': customer.Email,
                 'phone': customer.Phone,
                 'username': customer.user_account.UserName,
-                'role': {
-                    "customer": True,
-                    "employee": True,
-                    "admin": True,
-                    "any": True
-                }
+                'role': json.JSONDecoder().decode(customer.Role)
             }     
 
         return ResponseService().response('success', 200, data), 200 

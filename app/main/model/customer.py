@@ -16,6 +16,7 @@ class Customer(db.Model):
     Email = db.Column(db.String(255))
     Address = db.Column(db.String(255))
     Gender = db.Column(db.Integer, default=0)
+    Role = db.Column(db.JSON)
 
     user_account = db.relationship('UserAccount',
         backref=db.backref('customer', lazy=True))
