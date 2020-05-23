@@ -10,7 +10,7 @@ from app.main.service.payment_account_service import PaymentAccountService
 from app.main.service.response_service import ResponseService
 import json
 from flask import jsonify
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from sqlalchemy.orm import joinedload, lazyload, subqueryload, raiseload
 from random import randint
 import jwt
@@ -113,11 +113,24 @@ def update_customer(data):
         
    
 
-def get_all_customer():
-    list_customer = Customer.query.options(joinedload('user_account'))
-    return jsonify(data=[i.serialize for i in list_customer])
-    #return ResponseService().response('success', 200, jsonify(json_list=[i.serialize for i in list_customer])), 201
-    # return Customer.query.all()
+def get_all_customer(data):
+    data = data.args
+
+    try: 
+        if data:
+            if "phone" in data and "customer_name" in data:
+                condition = or_("phone" in data and Customer.Phone==data['phone'], "customer_name" in data and Customer.CustomerName==data['customer_name'])
+            elif "customer_name" in data:
+                condition = Customer.CustomerName==data['customer_name']
+            elif "phone" in data:            
+                condition = Customer.Phone==data['phone']
+
+            print(condition)
+            list_customer = Customer.query.options(joinedload('user_account')).filter(condition)
+
+        return jsonify(data=[i.serialize for i in list_customer])
+    except:
+        return jsonify(data=[])
 
 def get_customer(id):
     customer = Customer.query.filter_by(CustomerId=id).options(joinedload('user_account')).first()

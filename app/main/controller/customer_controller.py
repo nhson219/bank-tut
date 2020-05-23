@@ -24,7 +24,7 @@ class CustomerList(Resource):
     @jwt_required
     # @api.marshal_list_with(_customer_get, envelope='data')
     def get(self):
-        return get_all_customer()
+        return get_all_customer(request)
 
     
 
@@ -142,7 +142,6 @@ class CustomerTransactionRemind(Resource):
     @api.doc('Get customer transaction remind')
     #@jwt_required
     def get(self):
-        print(request.args)
         return get_transaction_remind(request)
 
     def post(self):
