@@ -18,7 +18,7 @@ _customer_get = CustomerDto.customer_get
 _customer_add = CustomerDto.customer_add
 _customer_update = CustomerDto.customer_update
 
-@api.route('/')
+@api.route('/', methods=['POST', 'GET','OPTIONS'])
 class CustomerList(Resource):
 
     
