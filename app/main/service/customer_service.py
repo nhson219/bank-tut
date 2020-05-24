@@ -127,6 +127,8 @@ def get_all_customer(data):
 
             print(condition)
             list_customer = Customer.query.options(joinedload('user_account')).filter(condition)
+        else:
+            list_customer = Customer.query.options(joinedload('user_account'))                        
 
         return jsonify(data=[i.serialize for i in list_customer])
     except:
