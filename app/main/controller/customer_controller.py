@@ -21,7 +21,7 @@ _customer_update = CustomerDto.customer_update
 @api.route('/')
 class CustomerList(Resource):
 
-    @cross_origin()
+    
     @api.doc('list_of_register_customer')
     @jwt_required
     # @api.marshal_list_with(_customer_get, envelope='data')
