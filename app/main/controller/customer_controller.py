@@ -11,6 +11,7 @@ from flask_jwt_extended import (
     get_jwt_claims
 )
 from ..service.transaction_remind_service import create_transaction_remind, update_transaction_remind, get_transaction_remind
+from flask_cors import cross_origin
 
 api = CustomerDto.api
 _customer_get = CustomerDto.customer_get
@@ -20,6 +21,7 @@ _customer_update = CustomerDto.customer_update
 @api.route('/')
 class CustomerList(Resource):
 
+    @cross_origin()
     @api.doc('list_of_register_customer')
     @jwt_required
     # @api.marshal_list_with(_customer_get, envelope='data')
@@ -42,6 +44,11 @@ class CustomerList(Resource):
     def patch(self):
         data = request.json
         return update_customer(data=data)
+
+    # def options (self):
+    #     return {'Allow' : 'PUT' }, 200, \
+    #     { 'Access-Control-Allow-Origin': '*', \
+    #     'Access-Control-Allow-Methods' : 'PUT,GET' }        
 
 @api.route('/<int:customer_id>')
 @api.param('customer_id', 'The Customer identifier')
