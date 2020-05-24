@@ -24,6 +24,7 @@ class CustomerList(Resource):
     
     @api.doc('list_of_register_customer')
     @jwt_required
+    @cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
     # @api.marshal_list_with(_customer_get, envelope='data')
     def get(self):
         return get_all_customer(request)
