@@ -46,6 +46,7 @@ class CustomerList(Resource):
         data = request.json
         return update_customer(data=data)
 
+    @cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
     def options(self):
         return get_all_customer(request)       
 
