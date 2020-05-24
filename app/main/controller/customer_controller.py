@@ -24,7 +24,7 @@ class CustomerList(Resource):
     
     @api.doc('list_of_register_customer')
     @jwt_required
-    @cross_origin(headers=['Content- Type','Authorization'])
+    # @cross_origin(headers=['Content- Type','Authorization'])
     # @api.marshal_list_with(_customer_get, envelope='data')
     def get(self):
         return get_all_customer(request)
@@ -46,7 +46,7 @@ class CustomerList(Resource):
         data = request.json
         return update_customer(data=data)
 
-    @cross_origin(headers=['Content- Type','Authorization'])
+    # @cross_origin(headers=['Content- Type','Authorization'])
     def options(self):
         return get_all_customer(request)       
 
