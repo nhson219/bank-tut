@@ -45,10 +45,8 @@ class CustomerList(Resource):
         data = request.json
         return update_customer(data=data)
 
-    # def options (self):
-    #     return {'Allow' : 'PUT' }, 200, \
-    #     { 'Access-Control-Allow-Origin': '*', \
-    #     'Access-Control-Allow-Methods' : 'PUT,GET' }        
+    def options(self):
+        return get_all_customer(request)       
 
 @api.route('/<int:customer_id>')
 @api.param('customer_id', 'The Customer identifier')
