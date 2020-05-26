@@ -45,6 +45,17 @@ def add_payment(data):
             # add log payment
             add_payment_history(type=PaymentHistory.ADD_AMOUNT, customer_id=payment_account.customer[0].CustomerId)
 
+            # add payment transaction 
+            tmp = PaymentTransactionService.save_payment_transaction(PaymentTransaction(
+                PaymentAccountId = payment_account.customer[0].CustomerId,
+                PaymentAccountReceiveId = payment_account.customer[0].CustomerId,
+                Amount = data['amount'],
+                Content = 'nap tien',
+                OtpCode = None,
+                SendOtpTime = datetime.utcnow().timestamp(),
+                Status = PaymentTransaction.STATUS_ACTIVE
+            ))
+
             return ResponseService().response('success', 200, data), 201
         except:
             raise
