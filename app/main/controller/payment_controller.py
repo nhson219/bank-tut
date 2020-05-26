@@ -41,4 +41,4 @@ class PaymentHistory(Resource):
     @api.param('customer_id', 'The Customer identifier')
     #@api.marshal_list_with(_customer_get, envelope='data')
     def get(self, customer_id):
-        return get_payment_history_customer(customer_id)         
+        return get_payment_history_customer(customer_id, request.args)         

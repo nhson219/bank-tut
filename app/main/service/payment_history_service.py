@@ -9,13 +9,16 @@ from botocore.exceptions import ClientError
 from datetime import datetime
 from flask import jsonify
 from sqlalchemy import case, literal_column, func
+from datetime import date
+
 
 
 def add_payment_history(**data):
     try:
         db.session.add(PaymentHistory(
                 Type=data['type'],
-                CustomerId=data['customer_id']
+                CustomerId=data['customer_id'],
+                CreatedDate=date.today()
             )
         )
         db.session.commit()

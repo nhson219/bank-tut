@@ -17,10 +17,9 @@ import boto3
 from botocore.exceptions import ClientError
 from datetime import datetime
 from flask import jsonify
-from sqlalchemy import case, literal_column, func
+from sqlalchemy import case, literal_column, func, and_
 from app.main.service.payment_history_service import add_payment_history
-
-
+from datetime import date, timedelta
 
 SENDER = "nhson219@gmail.com"
 CONFIGURATION_SET = "nhson219"
@@ -235,7 +234,11 @@ def confirm_transaction(data):
         }
         return response_object, 409    
 
-def get_payment_history_customer(data):
+def get_payment_history_customer(data, request):
+
+    date_from = 'from' in request and request['from'] or date.today() - timedelta(30)
+    date_to = 'to' in request and request['to'] or date.today()
+
     customer_1 = aliased(Customer, name='c1')
     customer_2 = aliased(Customer, name='c2')
     payment_account = aliased(PaymentAccount, name='pa')
@@ -269,18 +272,21 @@ def get_payment_history_customer(data):
             func.IF(PaymentHistory.Type == 2, subquery.c.send, None).label("sender"),
             func.IF(PaymentHistory.Type == 2, subquery.c.received, None).label("received"),
             func.IF(PaymentHistory.Type == 2, subquery.c.Amount, None).label("amount"),
+            PaymentHistory.CreatedDate.label('created_date'),
         )\
         .join(Customer)\
         .join(subquery, subquery.c.CustomerId == PaymentHistory.CustomerId)\
         .filter(PaymentHistory.CustomerId==data)\
+        .filter(and_(PaymentHistory.CreatedDate >= date_from, PaymentHistory.CreatedDate <= date_to))\
         .all()  
 
-    list_key = ["message", "type", "number_account", "sender", "received", "amount"]
+    list_key = ["message", "type", "number_account", "sender", "received", "amount", "created_date"]
     dict_result = []
+    
     for item in result:
         tmp_dict = {}
         for index, child_item in enumerate(item):
-            tmp_dict[list_key[index]] = child_item
+            tmp_dict[list_key[index]] = str(child_item)
         dict_result.append(tmp_dict)
         
     # return jsonify(data=[i.serialize for i in result])
