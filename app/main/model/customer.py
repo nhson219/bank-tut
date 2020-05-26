@@ -47,5 +47,6 @@ class Customer(db.Model):
             "gender" : self.Gender,
             'amount' : self.payment_account.Amount,
             'number_payment' : self.payment_account.NumberPaymentAccount,
-            'user_name': self.user_account.UserName
+            'user_name': self.user_account.UserName,
+            'role': self.Role,
         }

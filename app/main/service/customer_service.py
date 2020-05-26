@@ -125,7 +125,6 @@ def get_all_customer(data):
             elif "phone" in data:            
                 condition = Customer.Phone==data['phone']
 
-            print(condition)
             list_customer = Customer.query.options(joinedload('user_account')).filter(condition)
         else:
             list_customer = Customer.query.options(joinedload('user_account'))                        
