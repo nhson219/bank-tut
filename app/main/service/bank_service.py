@@ -12,6 +12,9 @@ from app.main.service.payment_history_service import add_payment_history
 from app.main.model.customer import Customer
 from app.main.model.payment_history import PaymentHistory
 from app.main.service.response_service import ResponseService
+from app.main.service.payment_transaction_service import PaymentTransactionService
+from app.main.model.payment_transaction import PaymentTransaction
+
 import base64
 from app.main.model.payment_account import PaymentAccount
 from flask import jsonify
@@ -96,6 +99,18 @@ def create_transaction(data):
             if customer:
                 customer.payment_account.Amount = data['amount']
                 db.session.commit()
+
+
+                # add payment transaction 
+                tmp = PaymentTransactionService.save_payment_transaction(PaymentTransaction(
+                    PaymentAccountId = customer.CustomerId,
+                    PaymentAccountReceiveId = customer.CustomerId,
+                    Amount = data['amount'],
+                    Content = 'nap tien',
+                    OtpCode = None,
+                    SendOtpTime = datetime.utcnow().timestamp(),
+                    Status = PaymentTransaction.STATUS_ACTIVE
+                ))
 
                 # add log history payment    
                 add_payment_history(type=PaymentHistory.SEND_AMOUNT, customer_id=customer.CustomerId)
