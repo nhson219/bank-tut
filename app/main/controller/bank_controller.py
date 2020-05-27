@@ -2,7 +2,7 @@ from flask import request, send_from_directory
 from flask_restplus import Resource
 
 from ..util.dto import BankDto
-from ..service.bank_service import save_new_bank, create_new_rsa, create_transaction, convert_uuid
+from ..service.bank_service import save_new_bank, create_new_rsa, create_transaction, convert_uuid, get_all_customer
 from constants import ROOT_PATH
 
 api = BankDto.api
@@ -53,4 +53,11 @@ class BankConvertUUId(Resource):
     def post(self):
         """ bank convert """
         data = request.json
-        return convert_uuid(data)                                       
+        return convert_uuid(data)
+
+@api.route('/customer')
+class BankCustomer(Resource):
+    @api.response(201, 'Get customer.')
+    @api.doc('Get customer')
+    def get(self):
+        return get_all_customer()                                               

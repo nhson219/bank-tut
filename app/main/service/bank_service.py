@@ -14,7 +14,7 @@ from app.main.model.payment_history import PaymentHistory
 from app.main.service.response_service import ResponseService
 import base64
 from app.main.model.payment_account import PaymentAccount
-
+from flask import jsonify
 
 def save_new_bank(data):
     RSAkey = RSA.generate(1024)
@@ -23,7 +23,6 @@ def save_new_bank(data):
 
     bank = Bank.query.filter_by(Name=data['name']).first()
     if not bank:
-        print(uuid.uuid1())
         try:
             new_bank = Bank(
                 BankId = str(uuid.uuid1()),
@@ -92,8 +91,6 @@ def create_transaction(data):
 
         bank = Bank.query.filter_by(BankId=uuid).first()
 
-        print(bank.Name)
-
         if bank:
             customer = Customer.query.join('payment_account').filter(PaymentAccount.NumberPaymentAccount==data['number_account']).first()
             if customer:
@@ -153,6 +150,20 @@ def convert_uuid(data):
     except Exception as e:
         raise        
 
+
+def get_all_customer():
+    try: 
+        list_customer = db.session.query(Customer, PaymentAccount, Customer.CustomerName, PaymentAccount.NumberPaymentAccount).select_from(Customer).join(PaymentAccount).all()
+        data = []
+        for i in list_customer:
+            tmp = {
+                'customer': i[2],
+                'number_payment': i[3]
+            }
+            data.append(tmp)
+        return ResponseService().response('success', 200, data), 201
+    except:
+        return jsonify(data=[])
 
 
 
