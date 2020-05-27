@@ -109,7 +109,7 @@ def create_transaction(data):
                     Amount = data['amount'],
                     Content = 'nap tien',
                     OtpCode = None,
-                    SendOtpTime = datetime.utcnow().timestamp(),
+                    SendOtpTime = None,
                     Status = PaymentTransaction.STATUS_ACTIVE
                 ))
 
