@@ -18,6 +18,14 @@ from flask import jsonify
 from sqlalchemy import case, literal_column, func, or_, text
 from app.main.service.payment_history_service import add_payment_history
 from app.main.model.transaction_remind import TransactionRemind
+import boto3
+from botocore.exceptions import ClientError
+
+SENDER = "nhson219@gmail.com"
+CONFIGURATION_SET = "nhson219"
+AWS_REGION = "us-east-1"
+SUBJECT = "Internet Banking project"
+CHARSET = "UTF-8"
 
 def create_transaction_remind(data):
     customer = Customer.query.join("payment_account").filter(PaymentAccount.NumberPaymentAccount==data['number_payment']).first()
@@ -39,7 +47,10 @@ def create_transaction_remind(data):
                 Status = TransactionRemind.STATUS_CREATED
             )
             
+            
             db.session.add(tmp)
+            
+            send_mail(customer_receive.Email, data['content'], data['amount'])
             db.session.commit()
         except:
             db.session.rollback()
@@ -105,3 +116,48 @@ def get_transaction_remind(request):
             'message': 'Transaction remind not exist. Please try again'
         }
         return response_object, 409    
+
+def send_mail(email, content, amount):
+    # Create a new SES resource and specify a region.
+    client = boto3.client('ses',
+        aws_access_key_id='AKIA2IPQCAGZEJ7VDYUH',
+        aws_secret_access_key="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",
+        region_name=AWS_REGION
+    )
+    print(content)
+    # Try to send the email.
+    try:
+        #Provide the contents of the email.
+        response = client.send_email(
+            Destination={
+                'ToAddresses': [
+                    email,
+                ],
+            },
+            Message={
+                'Body': {
+                    'Html': {
+                        'Charset': CHARSET,
+                        'Data': 'Notifycation remind : ' + content + ' ' + str(amount),
+                    },
+                    'Text': {
+                        'Charset': CHARSET,
+                        'Data': 'Notifycation remind : ' + content + ' ' + str(amount),
+                    },
+                },
+                'Subject': {
+                    'Charset': CHARSET,
+                    'Data': SUBJECT,
+                },
+            },
+            Source=SENDER,
+            # If you are not using a configuration set, comment or delete the
+            # following line
+            ConfigurationSetName=CONFIGURATION_SET,
+        )
+    # Display an error if something goes wrong.	
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+    else:
+        print("Email sent! Message ID:"),
+        print(response['MessageId'])
