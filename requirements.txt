@@ -35,7 +35,7 @@ mccabe==0.6.1
 mysql-connector-python==8.0.19
 mysqlclient==1.4.6
 pbr==5.4.4
-protobuf==3.6.1
+protobuf==3.15.0
 pycparser==2.19
 pycrypto==2.6.1
 PyJWT==1.7.1
